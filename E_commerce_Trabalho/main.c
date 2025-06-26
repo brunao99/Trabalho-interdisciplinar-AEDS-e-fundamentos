@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Cria��o da struct dos produtos #Bruno Henrique
+// Criacao da struct dos produtos #Bruno Henrique
 typedef struct new_produtos{
     char nome_produto[50];
     int codigo_produto;
@@ -10,15 +10,40 @@ typedef struct new_produtos{
     int preco_venda_produto;
 }produtos;
 
-void menu_principal(){
- printf("=====E-commerce do Djabe e da Mafe=====\n");
-printf("Produtos (1)\nVendedores (2)\nCompradores (3)\nVendas (4)\n")
+void menu_produtos(){
+int flag;
+printf("======Menu produtos======");
+printf("\nConsultar Produtos (1)\nCriar Produtos (2)\nVoltar para Menu principal (3)\n\nDigite o numero do respectivo processo para acessa-lo: ");
+scanf("%d",&flag);
+switch(flag){
+    case 1:
+    ConsultarProdutoArquivoDados();
+    break;
+    case 2:
+    CriarProdutoArquivoDados();
+    break;
+    case 3:
+    menu_principal();
+    break;
+}
+
+}
+
+void ConsultarProdutoArquivoDados(){
+const char *nomearquivo = "./Dados/DadosDosProdutos.txt";
+FILE *arquivocomdados = fopen(nomearquivo, "r");
+char linha[100];
+printf("=== Lista de Produtos ===\n");
+    while (fgets(linha, sizeof(linha), arquivocomdados)) {
+        printf("%s", linha); 
+
 }
 
 
+}
 
 
-//A persistencia dos dados sera criada em uma fun��o responsavel por criar
+//A persistencia dos dados sera criada em uma funcao responsavel por criar
 //o arquivo.txt # Rafael Abras
 void CriarProdutoArquivoDados(){
 const char *nomearquivo = "./Dados/DadosDosProdutos.txt";
@@ -85,11 +110,11 @@ fclose(dados_produtos);
 void menu_principal(){
     int flag;
 printf("======E-commerce do Djabe e da Mafe======\n\n");
-printf("Produtos (1)\nVendedores (2)\nCompradores (3)\nVendas (4)\nNota Fiscal (5)\n\n Digite o numero do respectivo processo para acessa-lo: ");
-scanf("%d",flag);
+printf("Produtos (1)\nVendedores (2)\nCompradores (3)\nVendas (4)\nNota Fiscal (5)\nSair da loja (6)\n Digite o numero do respectivo processo para acessa-lo: ");
+scanf("%d",&flag);
 switch(flag){
 case 1:
-    menu_produto();
+    menu_produtos();
     break;
 case 2:
     menu_vendedores();
@@ -103,10 +128,13 @@ case 4:
 case 5:
     menu_nota_fiscal();
     break;
+case 6:
+    break;
 }
 }
 
 int main()
 {
+    menu_principal();
     return 0;
 }
