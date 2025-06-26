@@ -2,6 +2,9 @@
 
 ## 📋 Backlog do Trabalho
 
+### 0. Menu principal
+- [ ] **0.1** Criar Menu Pricipal da loja
+
 ### 1. Cadastro de Produtos
 - [ ] **1.1** Criar `struct` de Produtos
 - [ ] **1.2** Função para criar Produto
@@ -39,6 +42,7 @@
 
 #### Bruno e Rafael
 - Bruno:
+  - [✅] 0.1 Criar Menu principal do E-commerce
   - [✅]  1.1 Criar `struct` de Produtos  
   - [ ] 1.3 Garantir que não haja conflito entre os códigos dos produtos  
 - Rafael:

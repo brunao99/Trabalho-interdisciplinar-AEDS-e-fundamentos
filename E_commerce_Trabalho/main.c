@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Criação da struct dos produtos #Bruno Henrique
+// Criaï¿½ï¿½o da struct dos produtos #Bruno Henrique
 typedef struct new_produtos{
     char nome_produto[50];
     int codigo_produto;
@@ -10,7 +10,15 @@ typedef struct new_produtos{
     int preco_venda_produto;
 }produtos;
 
-//A persistencia dos dados sera criada em uma função responsavel por criar
+void menu_principal(){
+ printf("=====E-commerce do Djabe e da Mafe=====\n");
+printf("Produtos (1)\nVendedores (2)\nCompradores (3)\nVendas (4)\n")
+}
+
+
+
+
+//A persistencia dos dados sera criada em uma funï¿½ï¿½o responsavel por criar
 //o arquivo.txt # Rafael Abras
 void CriarProdutoArquivoDados(){
 const char *nomearquivo = "./Dados/DadosDosProdutos.txt";
@@ -63,9 +71,42 @@ fprintf(dados_produtos, "%s,%d,%d,%d\n", nome_produto, codigo+1, quantidadeEstoq
 fclose(dados_produtos);
 }
 
+
+
+
+
+
+
+
+
+
+
+
+void menu_principal(){
+    int flag;
+printf("======E-commerce do Djabe e da Mafe======\n\n");
+printf("Produtos (1)\nVendedores (2)\nCompradores (3)\nVendas (4)\nNota Fiscal (5)\n\n Digite o numero do respectivo processo para acessa-lo: ");
+scanf("%d",flag);
+switch(flag){
+case 1:
+    menu_produto();
+    break;
+case 2:
+    menu_vendedores();
+    break;
+case 3:
+    menu_compradores();
+    break;
+case 4:
+    menu_vendas();
+    break;
+case 5:
+    menu_nota_fiscal();
+    break;
+}
+}
+
 int main()
 {
-    CriarProdutoArquivoDados();
-   CriarProduto("Teste", 10, 10);
     return 0;
 }
