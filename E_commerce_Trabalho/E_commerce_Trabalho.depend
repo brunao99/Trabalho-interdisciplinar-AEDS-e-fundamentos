@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1750904023 source:c:\users\rafae\documents\projetos programação\faculdade\trabalho-interdisciplinar-aeds-e-fundamentos\e_commerce_trabalho\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
