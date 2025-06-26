@@ -35,11 +35,9 @@ FILE *arquivocomdados = fopen(nomearquivo, "r");
 char linha[100];
 printf("=== Lista de Produtos ===\n");
     while (fgets(linha, sizeof(linha), arquivocomdados)) {
-        printf("%s", linha); 
+        printf("%s", linha);
 
 }
-
-
 }
 
 
@@ -59,6 +57,8 @@ dados_produtos = fopen(nomearquivo, "w");
 fclose(dados_produtos);
 }
 }
+
+
 
 // Codigo para pegar o ultimo codigo do produto lendo o arquivo ate EOF, e assim adicionando 1 NO ULTIMO ID. arquivo.txt # Rafael Abras
 int ObterUltimoCodigoProduto(const char *nomearquivo) {
@@ -113,9 +113,8 @@ dados_produtos = fopen(nomearquivo, "w");
 fclose(dados_produtos);
 }
 }
-//Permite visualizar os vendedores 
+//Permite visualizar os vendedores
 void menu_vendedores() {
-    const char
     int opcao;
 
     do {
@@ -148,14 +147,6 @@ void menu_vendedores() {
 }
 
 
-
-
-
-
-
-
-
-
 void menu_principal(){
     int flag;
 printf("======E-commerce do Djabe e da Mafe======\n\n");
@@ -166,16 +157,16 @@ case 1:
     menu_produtos();
     break;
 case 2:
-    menu_vendedores();
+   // menu_vendedores();
     break;
 case 3:
-    menu_compradores();
+   // menu_compradores();
     break;
 case 4:
-    menu_vendas();
+   // menu_vendas();
     break;
 case 5:
-    menu_nota_fiscal();
+   // menu_nota_fiscal();
     break;
 case 6:
     break;
@@ -184,6 +175,7 @@ case 6:
 
 int main()
 {
+    CriarVendedoresArquivoDados();
     menu_principal();
     return 0;
 }

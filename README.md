@@ -6,6 +6,7 @@
 - [ ] **0.1** Criar Menu Pricipal da loja
 
 ### 1. Cadastro de Produtos
+- [ ] **1.0** Gerar arquivo para Produto
 - [ ] **1.1** Criar `struct` de Produtos
 - [ ] **1.2** Função para criar Produto
 - [ ] **1.21** Geracao do id automaticamente.
@@ -13,6 +14,7 @@
 - [ ] **1.4** Consultar, alterar, inserir e excluir produtos no cadastro
 
 ### 2. Cadastro de Vendedores
+- [ ] **2.0** 2.0 Gerar o arquivo para vendedores
 - [ ] **2.1** Criar `struct` de Vendedores
 - [ ] **2.2** Função para criar Vendedores
 - [ ] **2.3** Garantir comissão dos vendedores e aumento de salário
@@ -44,8 +46,9 @@
 - Bruno:
   - [✅] 0.1 Criar Menu principal do E-commerce
   - [✅]  1.1 Criar `struct` de Produtos  
-  - [ ] 1.3 Garantir que não haja conflito entre os códigos dos produtos  
+  - [✅] 1.3 Garantir que não haja conflito entre os códigos dos produtos  
 - Rafael:
+  - [✅]  1.0 Gerar arquivo para Produto
   - [✅]  1.2 Função para criar Produto
   - [✅]  1.21 Geracao do id automaticamente
   - [ ] 1.4 Consultar, alterar, inserir e excluir produtos no cadastro
@@ -55,7 +58,8 @@
   - [ ] 2.1 Criar `struct` de Vendedores  
   - [ ] 2.3 Garantir comissão dos vendedores e aumento de salário
 - João:
-  - [ ] 2.2 Função para criar Vendedores  
+  - [✅] 2.0 Gerar o arquivo para vendedores
+  - [✅] 2.2 Função para criar Vendedores  
   - [ ] 2.4 Garantir que não haverá conflito no cadastro de dois vendedores  
   - [ ] 2.5 Consultar, alterar, inserir e excluir vendedores no cadastro  
 

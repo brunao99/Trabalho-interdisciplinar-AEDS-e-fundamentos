@@ -1,0 +1,24 @@
+# Object files
+*.o
+*.obj
+
+# Executables
+*.exe
+a.out
+
+# Libraries
+*.lib
+*.so
+*.dll
+
+# Debugging and build directories
+build/
+bin/
+debug/
+release/
+
+# Editor/IDE specific files (examples)
+.vscode/
+.idea/
+*.swp
+*~
