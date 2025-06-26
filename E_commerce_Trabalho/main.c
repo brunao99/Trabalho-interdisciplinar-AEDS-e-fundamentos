@@ -96,10 +96,26 @@ fprintf(dados_produtos, "%s,%d,%d,%d\n", nome_produto, codigo+1, quantidadeEstoq
 fclose(dados_produtos);
 }
 
+// Criação do arquivo txt para cadastro dos vendedores #João Felipe Manferrari
 
-// Permite visualizar e cadastrar os vendedores #João Felipe Manferrari
 
+void CriarVendedoresArquivoDados(){
+const char *nomearquivo = "./Dados/DadosDosVendedores.txt";
+
+FILE *verificarExistencia = fopen(nomearquivo, "r");
+
+if (verificarExistencia){
+fclose(verificarExistencia);
+}
+else{
+FILE *dados_produtos;
+dados_produtos = fopen(nomearquivo, "w");
+fclose(dados_produtos);
+}
+}
+//Permite visualizar os vendedores 
 void menu_vendedores() {
+    const char
     int opcao;
 
     do {
@@ -112,7 +128,7 @@ void menu_vendedores() {
 
         switch (opcao) {
             case 1:
-                cadastrar_vendedor();
+                CriarVendedoresArquivoDados();
                 break;
             case 2:
                 printf("\n--- Lista de Vendedores ---\n");
