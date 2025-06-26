@@ -97,6 +97,39 @@ fclose(dados_produtos);
 }
 
 
+// Permite visualizar e cadastrar os vendedores #João Felipe Manferrari
+
+void menu_vendedores() {
+    int opcao;
+
+    do {
+        printf("\n--- Menu de Vendedores ---\n");
+        printf("1. Cadastrar Vendedor\n");
+        printf("2. Listar Vendedores\n");
+        printf("3. Voltar ao Menu Principal\n");
+        printf("Escolha uma opção: ");
+        scanf("%d", &opcao);
+
+        switch (opcao) {
+            case 1:
+                cadastrar_vendedor();
+                break;
+            case 2:
+                printf("\n--- Lista de Vendedores ---\n");
+                for (int i = 0; i < total_vendedores; i++) {
+                    printf("ID: %d | Nome: %s | Email: %s | Telefone: %s\n",
+                        vendedores[i].id, vendedores[i].nome,
+                        vendedores[i].email, vendedores[i].telefone);
+                }
+                break;
+            case 3:
+                printf("Voltando ao menu principal...\n");
+                break;
+            default:
+                printf("Opção inválida.\n");
+        }
+    } while (opcao != 3);
+}
 
 
 
