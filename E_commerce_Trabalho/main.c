@@ -9,6 +9,18 @@ typedef struct new_produtos{
     int qnt_estoque_produto;
     int preco_venda_produto;
 }produtos;
+// Criação da struct dos vendedores #Matheus
+typedef struct {
+    int id;
+    char nome[50];
+    float salarioFixo;
+    float comissao;
+} Vendedor;
+
+// Armazenamento em memória dos vendedores cadastrados
+// Será preenchido ao cadastrar e listado no menu de vendedores
+Vendedor vendedores[100];         //  100 vend
+int total_vendedores = 0;         
 
 void menu_produtos(){
 int flag;
@@ -113,6 +125,46 @@ dados_produtos = fopen(nomearquivo, "w");
 fclose(dados_produtos);
 }
 }
+// Função para cadastrar vendedor e salvar no arquivo #Matheus
+void cadastrarVendedor() {
+    FILE *arquivo = fopen("./Dados/DadosDosVendedores.txt", "a");
+    if (!arquivo) {
+        printf("Erro ao abrir o arquivo de vendedores.\n");
+        return;
+    }
+
+    Vendedor v;
+    v.id = total_vendedores + 1;
+
+    printf("Nome do vendedor: ");
+    getchar(); // limpa o buffer do scanf anterior
+    fgets(v.nome, 50, stdin);
+    v.nome[strcspn(v.nome, "\n")] = '\0';
+
+    printf("Salário fixo: ");
+    scanf("%f", &v.salarioFixo);
+
+    v.comissao = 0;
+
+    // Salva no vetor em memória
+    vendedores[total_vendedores++] = v;
+
+    // Salva no arquivo
+    fprintf(arquivo, "%d,%s,%.2f,%.2f\n", v.id, v.nome, v.salarioFixo, v.comissao);
+    fclose(arquivo);
+
+    printf("Vendedor cadastrado com sucesso!\n");
+}
+// Função para aplicar comissão de 3% ao vendedor após uma venda #Matheus
+void aplicarComissao(Vendedor *v, float valorVenda) {
+    float bonus = valorVenda * 0.03;
+    v->comissao += bonus;
+    v->salarioFixo += bonus;
+    printf("Comissão de R$%.2f aplicada ao vendedor %s\n", bonus, v->nome);
+}
+
+
+
 //Permite visualizar os vendedores
 void menu_vendedores() {
     int opcao;
@@ -157,7 +209,8 @@ case 1:
     menu_produtos();
     break;
 case 2:
-   // menu_vendedores();
+   menu_vendedores();
+
     break;
 case 3:
    // menu_compradores();
