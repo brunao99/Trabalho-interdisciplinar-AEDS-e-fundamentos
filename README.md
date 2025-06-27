@@ -47,11 +47,12 @@
   - [✅] 0.1 Criar Menu principal do E-commerce
   - [✅]  1.1 Criar `struct` de Produtos  
   - [✅] 1.3 Garantir que não haja conflito entre os códigos dos produtos  
+  - [✅ ] 1.4 Consultar, alterar e excluir produtos no cadastro
 - Rafael:
   - [✅]  1.0 Gerar arquivo para Produto
   - [✅]  1.2 Função para criar Produto
   - [✅]  1.21 Geracao do id automaticamente
-  - [ ] 1.4 Consultar, alterar, inserir e excluir produtos no cadastro
+
 
 #### João e Matheus
 - Matheus:

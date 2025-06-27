@@ -22,10 +22,12 @@ typedef struct {
 Vendedor vendedores[100];         //  100 vend
 int total_vendedores = 0;         
 
+
+//COMEÇO DA PARTE PRODUTOS
 void menu_produtos(){
 int flag;
 printf("======Menu produtos======");
-printf("\nConsultar Produtos (1)\nCriar Produtos (2)\nVoltar para Menu principal (3)\n\nDigite o numero do respectivo processo para acessa-lo: ");
+printf("\nConsultar Produtos (1)\nCriar Produtos (2)\nEditar produto (3)\nExcluir produto (4)\nVoltar para Menu principal (5)\n\nDigite o numero do respectivo processo para acessa-lo: ");
 scanf("%d",&flag);
 switch(flag){
     case 1:
@@ -35,10 +37,123 @@ switch(flag){
     CriarProdutoArquivoDados();
     break;
     case 3:
+    EditarProduto();
+    break;
+    case 4:
+    ExcluirProduto();
+    break;
+    case 5:
     menu_principal();
     break;
 }
 
+}
+
+void EditarProduto() {
+    const char *nomearquivo = "./Dados/DadosDosProdutos.txt";
+    const char *tempArquivo = "./Dados/temp.txt";
+
+    FILE *arquivoOriginal = fopen(nomearquivo, "r");
+    FILE *arquivoTemp = fopen(tempArquivo, "w");
+
+    if (!arquivoOriginal || !arquivoTemp) {
+        printf("Erro ao abrir os arquivos.\n");
+        return;
+    }
+
+    int codigo;
+    printf("Digite o código do produto a ser editado: ");
+    scanf("%d", &codigo);
+
+    char linha[200];
+    int encontrado = 0;
+
+    while (fgets(linha, sizeof(linha), arquivoOriginal)) {
+        produtos temp;
+
+        if (sscanf(linha, "%49[^,],%d,%d,%d", temp.nome_produto, &temp.codigo_produto,
+                   &temp.qnt_estoque_produto, &temp.preco_venda_produto) == 4) {
+
+            if (temp.codigo_produto == codigo) {
+                encontrado = 1;
+                printf("Produto encontrado: %s\n", temp.nome_produto);
+
+                printf("Digite o novo nome do produto: ");
+                scanf(" %[^\n]", temp.nome_produto); 
+                printf("Digite o novo preço de venda: ");
+                scanf("%d", &temp.preco_venda_produto);
+                printf("Digite a nova quantidade em estoque: ");
+                scanf("%d", &temp.qnt_estoque_produto);
+            }
+
+            fprintf(arquivoTemp, "%s,%d,%d,%d\n",
+                    temp.nome_produto,
+                    temp.codigo_produto,
+                    temp.qnt_estoque_produto,
+                    temp.preco_venda_produto);
+        }
+    }
+
+    fclose(arquivoOriginal);
+    fclose(arquivoTemp);
+
+    remove(nomearquivo);
+    rename(tempArquivo, nomearquivo);
+
+    if (encontrado)
+        printf("Produto editado com sucesso.\n");
+    else
+        printf("Produto com código %d não encontrado.\n", codigo);
+}
+
+void ExcluirProduto() {
+    const char *nomearquivo = "./Dados/DadosDosProdutos.txt";
+    const char *tempArquivo = "./Dados/temp.txt";
+
+    FILE *arquivoOriginal = fopen(nomearquivo, "r");
+    FILE *arquivoTemp = fopen(tempArquivo, "w");
+
+    if (!arquivoOriginal || !arquivoTemp) {
+        printf("Erro ao abrir os arquivos.\n");
+        return;
+    }
+
+    int codigo;
+    printf("Digite o código do produto a ser excluído: ");
+    scanf("%d", &codigo);
+
+    char linha[200];
+    int encontrado = 0;
+
+    while (fgets(linha, sizeof(linha), arquivoOriginal)) {
+        produtos temp;
+
+        if (sscanf(linha, "%49[^,],%d,%d,%d", temp.nome_produto, &temp.codigo_produto,
+                   &temp.qnt_estoque_produto, &temp.preco_venda_produto) == 4) {
+
+            if (temp.codigo_produto == codigo) {
+                encontrado = 1;
+                printf("Produto '%s' removido com sucesso.\n", temp.nome_produto);
+ 
+                continue;
+            }
+
+            fprintf(arquivoTemp, "%s,%d,%d,%d\n",
+                    temp.nome_produto,
+                    temp.codigo_produto,
+                    temp.qnt_estoque_produto,
+                    temp.preco_venda_produto);
+        }
+    }
+
+    fclose(arquivoOriginal);
+    fclose(arquivoTemp);
+
+    remove(nomearquivo);
+    rename(tempArquivo, nomearquivo);
+
+    if (!encontrado)
+        printf("Produto com código %d não encontrado.\n", codigo);
 }
 
 void ConsultarProdutoArquivoDados(){
@@ -51,7 +166,6 @@ printf("=== Lista de Produtos ===\n");
 
 }
 }
-
 
 //A persistencia dos dados sera criada em uma funcao responsavel por criar
 //o arquivo.txt # Rafael Abras
@@ -125,6 +239,8 @@ dados_produtos = fopen(nomearquivo, "w");
 fclose(dados_produtos);
 }
 }
+//FIM DA PARTE DE PRODUTOS
+
 // Função para cadastrar vendedor e salvar no arquivo #Matheus
 void cadastrarVendedor() {
     FILE *arquivo = fopen("./Dados/DadosDosVendedores.txt", "a");
@@ -210,7 +326,6 @@ case 1:
     break;
 case 2:
    menu_vendedores();
-
     break;
 case 3:
    // menu_compradores();
