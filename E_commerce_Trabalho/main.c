@@ -17,37 +17,7 @@ typedef struct {
     float comissao;
 } Vendedor;
 
-// Armazenamento em memória dos vendedores cadastrados
-// Será preenchido ao cadastrar e listado no menu de vendedores
-Vendedor vendedores[100];         //  100 vend
-int total_vendedores = 0;         
 
-
-//COMEÇO DA PARTE PRODUTOS
-void menu_produtos(){
-int flag;
-printf("======Menu produtos======");
-printf("\nConsultar Produtos (1)\nCriar Produtos (2)\nEditar produto (3)\nExcluir produto (4)\nVoltar para Menu principal (5)\n\nDigite o numero do respectivo processo para acessa-lo: ");
-scanf("%d",&flag);
-switch(flag){
-    case 1:
-    ConsultarProdutoArquivoDados();
-    break;
-    case 2:
-    CriarProdutoArquivoDados();
-    break;
-    case 3:
-    EditarProduto();
-    break;
-    case 4:
-    ExcluirProduto();
-    break;
-    case 5:
-    menu_principal();
-    break;
-}
-
-}
 
 void EditarProduto() {
     const char *nomearquivo = "./Dados/DadosDosProdutos.txt";
@@ -79,7 +49,7 @@ void EditarProduto() {
                 printf("Produto encontrado: %s\n", temp.nome_produto);
 
                 printf("Digite o novo nome do produto: ");
-                scanf(" %[^\n]", temp.nome_produto); 
+                scanf(" %[^\n]", temp.nome_produto);
                 printf("Digite o novo preço de venda: ");
                 scanf("%d", &temp.preco_venda_produto);
                 printf("Digite a nova quantidade em estoque: ");
@@ -134,7 +104,7 @@ void ExcluirProduto() {
             if (temp.codigo_produto == codigo) {
                 encontrado = 1;
                 printf("Produto '%s' removido com sucesso.\n", temp.nome_produto);
- 
+
                 continue;
             }
 
@@ -243,34 +213,48 @@ fclose(dados_produtos);
 
 // Função para cadastrar vendedor e salvar no arquivo #Matheus
 void cadastrarVendedor() {
-    FILE *arquivo = fopen("./Dados/DadosDosVendedores.txt", "a");
+    FILE *arquivo = fopen("./Dados/DadosDosVendedores.txt", "a+");
     if (!arquivo) {
         printf("Erro ao abrir o arquivo de vendedores.\n");
         return;
     }
 
     Vendedor v;
-    v.id = total_vendedores + 1;
+    int ultimoId = 0;
+    char linha[200];
 
+    // le o último id do arquivo
+    while (fgets(linha, sizeof(linha), arquivo)) {
+        sscanf(linha, "%d,%*[^,],%*[^,],%*[^,],%*f,%*f", &ultimoId);
+    }
+
+    v.id = ultimoId + 1;
+
+    getchar();
     printf("Nome do vendedor: ");
-    getchar(); // limpa o buffer do scanf anterior
-    fgets(v.nome, 50, stdin);
+    fgets(v.nome, sizeof(v.nome), stdin);
     v.nome[strcspn(v.nome, "\n")] = '\0';
+
+    printf("Email do vendedor: ");
+    fgets(v.email, sizeof(v.email), stdin);
+    v.email[strcspn(v.email, "\n")] = '\0';
+
+    printf("Telefone do vendedor: ");
+    fgets(v.telefone, sizeof(v.telefone), stdin);
+    v.telefone[strcspn(v.telefone, "\n")] = '\0';
 
     printf("Salário fixo: ");
     scanf("%f", &v.salarioFixo);
 
     v.comissao = 0;
 
-    // Salva no vetor em memória
-    vendedores[total_vendedores++] = v;
+    fprintf(arquivo, "%d,%s,%s,%s,%.2f,%.2f\n",
+            v.id, v.nome, v.email, v.telefone, v.salarioFixo, v.comissao);
 
-    // Salva no arquivo
-    fprintf(arquivo, "%d,%s,%.2f,%.2f\n", v.id, v.nome, v.salarioFixo, v.comissao);
     fclose(arquivo);
-
     printf("Vendedor cadastrado com sucesso!\n");
 }
+
 // Função para aplicar comissão de 3% ao vendedor após uma venda #Matheus
 void aplicarComissao(Vendedor *v, float valorVenda) {
     float bonus = valorVenda * 0.03;
@@ -280,38 +264,195 @@ void aplicarComissao(Vendedor *v, float valorVenda) {
 }
 
 
+void ListarVendedores(){
+FILE *arquivo = fopen("./Dados/DadosDosVendedores.txt", "r");
+    if (!arquivo) {
+        printf("Nenhum vendedor cadastrado ainda.\n");
+        return;
+    }
 
-//Permite visualizar os vendedores
+    char linha[200];
+    Vendedor v;
+
+    printf("\n--- Lista de Vendedores ---\n");
+    while (fgets(linha, sizeof(linha), arquivo)) {
+        if (sscanf(linha, "%d,%49[^,],%49[^,],%19[^,],%f,%f",
+                   &v.id, v.nome, v.email, v.telefone, &v.salarioFixo, &v.comissao) == 6) {
+            printf("ID: %d | Nome: %s | Email: %s | Telefone: %s | Salário: R$%.2f | Comissão: R$%.2f\n",
+                   v.id, v.nome, v.email, v.telefone, v.salarioFixo, v.comissao);
+        }
+    }
+
+    fclose(arquivo);
+}
+
+void ExcluirVendedor() {
+    const char *nomearquivo = "./Dados/DadosDosVendedores.txt";
+    const char *tempArquivo = "./Dados/temp.txt";
+
+    FILE *arquivoOriginal = fopen(nomearquivo, "r");
+    FILE *arquivoTemp = fopen(tempArquivo, "w");
+
+    if (!arquivoOriginal || !arquivoTemp) {
+        printf("Erro ao abrir os arquivos.\n");
+        return;
+    }
+
+    int codigo;
+    printf("Digite o ID do vendedor a ser excluído: ");
+    scanf("%d", &codigo);
+
+    char linha[200];
+    int encontrado = 0;
+    Vendedor v;
+
+    while (fgets(linha, sizeof(linha), arquivoOriginal)) {
+        if (sscanf(linha, "%d,%49[^,],%49[^,],%19[^,],%f,%f",
+                   &v.id, v.nome, v.email, v.telefone, &v.salarioFixo, &v.comissao) == 6) {
+
+            if (v.id == codigo) {
+                encontrado = 1;
+                printf("Vendedor '%s' excluído com sucesso.\n", v.nome);
+                continue; // Não escreve no novo arquivo
+            }
+
+            fprintf(arquivoTemp, "%d,%s,%s,%s,%.2f,%.2f\n",
+                    v.id, v.nome, v.email, v.telefone, v.salarioFixo, v.comissao);
+        }
+    }
+
+    fclose(arquivoOriginal);
+    fclose(arquivoTemp);
+
+    remove(nomearquivo);
+    rename(tempArquivo, nomearquivo);
+
+    if (!encontrado)
+        printf("Vendedor com ID %d não encontrado.\n", codigo);
+}
+
+void EditarVendedor() {
+    const char *nomearquivo = "./Dados/DadosDosVendedores.txt";
+    const char *tempArquivo = "./Dados/temp.txt";
+
+    FILE *arquivoOriginal = fopen(nomearquivo, "r");
+    FILE *arquivoTemp = fopen(tempArquivo, "w");
+
+    if (!arquivoOriginal || !arquivoTemp) {
+        printf("Erro ao abrir os arquivos.\n");
+        return;
+    }
+
+    int codigo;
+    printf("Digite o ID do vendedor a ser editado: ");
+    scanf("%d", &codigo);
+    getchar();
+
+    char linha[200];
+    int encontrado = 0;
+    Vendedor v;
+
+    while (fgets(linha, sizeof(linha), arquivoOriginal)) {
+        if (sscanf(linha, "%d,%49[^,],%49[^,],%19[^,],%f,%f",
+                   &v.id, v.nome, v.email, v.telefone, &v.salarioFixo, &v.comissao) == 6) {
+
+            if (v.id == codigo) {
+                encontrado = 1;
+                printf("Vendedor encontrado: %s\n", v.nome);
+
+                printf("Digite o novo nome: ");
+                fgets(v.nome, sizeof(v.nome), stdin);
+                v.nome[strcspn(v.nome, "\n")] = '\0';
+
+                printf("Digite o novo email: ");
+                fgets(v.email, sizeof(v.email), stdin);
+                v.email[strcspn(v.email, "\n")] = '\0';
+
+                printf("Digite o novo telefone: ");
+                fgets(v.telefone, sizeof(v.telefone), stdin);
+                v.telefone[strcspn(v.telefone, "\n")] = '\0';
+
+                printf("Digite o novo salário fixo: ");
+                scanf("%f", &v.salarioFixo);
+                getchar();
+            }
+
+            fprintf(arquivoTemp, "%d,%s,%s,%s,%.2f,%.2f\n",
+                    v.id, v.nome, v.email, v.telefone, v.salarioFixo, v.comissao);
+        }
+    }
+
+    fclose(arquivoOriginal);
+    fclose(arquivoTemp);
+
+    remove(nomearquivo);
+    rename(tempArquivo, nomearquivo);
+
+    if (encontrado)
+        printf("Vendedor editado com sucesso.\n");
+    else
+        printf("Vendedor com ID %d não encontrado.\n", codigo);
+}
+
+//MENU DOS PRODUTOS
+void menu_produtos(){
+int flag;
+printf("======Menu produtos======");
+printf("\nConsultar Produtos (1)\nCriar Produtos (2)\nEditar produto (3)\nExcluir produto (4)\nVoltar para Menu principal (5)\n\nDigite o numero do respectivo processo para acessa-lo: ");
+scanf("%d",&flag);
+switch(flag){
+    case 1:
+    ConsultarProdutoArquivoDados();
+    break;
+    case 2:
+    CriarProdutoArquivoDados();
+    break;
+    case 3:
+    EditarProduto();
+    break;
+    case 4:
+    ExcluirProduto();
+    break;
+    case 5:
+    menu_principal();
+    break;
+}
+
+}
+
+//MENU VENDEDORES
 void menu_vendedores() {
     int opcao;
-
-    do {
+   do {
         printf("\n--- Menu de Vendedores ---\n");
         printf("1. Cadastrar Vendedor\n");
         printf("2. Listar Vendedores\n");
-        printf("3. Voltar ao Menu Principal\n");
+        printf("3. Editar Vendedor\n");
+        printf("4. Excluir Vendedor\n");
+        printf("5. Voltar ao Menu Principal\n");
         printf("Escolha uma opção: ");
         scanf("%d", &opcao);
 
         switch (opcao) {
             case 1:
-                CriarVendedoresArquivoDados();
+                cadastrarVendedor();
                 break;
             case 2:
-                printf("\n--- Lista de Vendedores ---\n");
-                for (int i = 0; i < total_vendedores; i++) {
-                    printf("ID: %d | Nome: %s | Email: %s | Telefone: %s\n",
-                        vendedores[i].id, vendedores[i].nome,
-                        vendedores[i].email, vendedores[i].telefone);
-                }
+                ListarVendedores();
                 break;
             case 3:
+                EditarVendedor();
+                break;
+            case 4:
+                ExcluirVendedor();
+                break;
+            case 5:
                 printf("Voltando ao menu principal...\n");
                 break;
             default:
                 printf("Opção inválida.\n");
         }
-    } while (opcao != 3);
+    } while (opcao != 5);
 }
 
 
