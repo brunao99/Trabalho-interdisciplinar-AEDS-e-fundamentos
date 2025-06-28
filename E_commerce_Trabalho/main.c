@@ -150,6 +150,37 @@ printf("=== Lista de Produtos ===\n");
 
 }
 }
+//Consulta os produtos disponívies no estoque #João Felipe Manferrari
+void VerificarProdutosComEstoqueDisponivel() {
+    const char *nomearquivo = "./Dados/DadosDosProdutos.txt";
+    FILE *arquivo = fopen(nomearquivo, "r");
+    if (!arquivo) {
+        printf("Erro ao abrir o arquivo.\n");
+        return;
+    }
+
+    produtos p;
+    char linha[200];
+    int encontrados = 0;
+
+    printf("\n--- Produtos com Estoque Disponível ---\n");
+    while (fgets(linha, sizeof(linha), arquivo)) {
+        if (sscanf(linha, "%49[^,],%d,%d,%d", p.nome_produto, &p.codigo_produto,
+                   &p.qnt_estoque_produto, &p.preco_venda_produto) == 4) {
+
+            if (p.qnt_estoque_produto > 0) {
+                printf("Produto: %s | Código: %d | Estoque: %d | Preço: R$ %d\n",
+                       p.nome_produto, p.codigo_produto, p.qnt_estoque_produto, p.preco_venda_produto);
+                encontrados = 1;
+            }
+        }
+    }
+
+    if (!encontrados)
+        printf("Nenhum produto com estoque disponível.\n");
+
+    fclose(arquivo);
+}
 
 //A persistencia dos dados sera criada em uma funcao responsavel por criar
 //o arquivo.txt # Rafael Abras
