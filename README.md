@@ -28,8 +28,9 @@
 
 ### 4. Cadastro da Venda
 - [ ] **4.1** Criar `struct` de Venda
-- [ ] **4.2** Função para registrar Vendas
-- [ ] **4.3** Verificar quantidade em estoque
+- [ ] **4.2** Criar `struct` de VendaItem
+- [ ] **4.3** Função para registrar Vendas
+- [ ] **4.4** Verificar quantidade em estoque
 
 ### 5. Emissão da Nota Fiscal
 - [ ] **5.1** Criar `struct` de Nota Fiscal
@@ -71,7 +72,8 @@
   - [ ] **3.1** Criar `struct` de Comprador
   - [ ] **3.2** Função para criar Comprador
 - Rafael:
-  - [ ] **4.1** Criar `struct` de Venda
+  - [✅] **4.2** Criar `struct` de VendaItem
+  - [✅] **4.1** Criar `struct` de Venda
   - [ ] **4.2** Função para registrar Vendas
 
    #### João e Matheus

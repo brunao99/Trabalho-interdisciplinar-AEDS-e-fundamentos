@@ -10,12 +10,26 @@ typedef struct new_produtos{
     int preco_venda_produto;
 }produtos;
 // Criação da struct dos vendedores #Matheus
-typedef struct {
+typedef struct vendedores {
     int id;
     char nome[50];
     float salarioFixo;
     float comissao;
 } Vendedor;
+// Criação da struct das vendas #Rafael Abras
+typedef struct venda {
+    int codigoDaVenda;
+    VendaItem ProdutosVenda[10];
+    int quantidadeItens;
+    float totalVenda;
+} Vendas;
+// Criação da struct dos itens que vão ir na venda #Rafael Abras
+
+typedef struct vendaitem_ {
+    produtos Produto;
+    int quantidade_comprada_produto;
+    float totalVenda;
+} VendaItem;
 
 
 
@@ -235,21 +249,12 @@ void cadastrarVendedor() {
     fgets(v.nome, sizeof(v.nome), stdin);
     v.nome[strcspn(v.nome, "\n")] = '\0';
 
-    printf("Email do vendedor: ");
-    fgets(v.email, sizeof(v.email), stdin);
-    v.email[strcspn(v.email, "\n")] = '\0';
-
-    printf("Telefone do vendedor: ");
-    fgets(v.telefone, sizeof(v.telefone), stdin);
-    v.telefone[strcspn(v.telefone, "\n")] = '\0';
-
     printf("Salário fixo: ");
     scanf("%f", &v.salarioFixo);
 
     v.comissao = 0;
 
-    fprintf(arquivo, "%d,%s,%s,%s,%.2f,%.2f\n",
-            v.id, v.nome, v.email, v.telefone, v.salarioFixo, v.comissao);
+   fprintf(arquivo, "%d,%s,%.2f,%.2f\n", v.id, v.nome, v.salarioFixo, v.comissao);
 
     fclose(arquivo);
     printf("Vendedor cadastrado com sucesso!\n");
@@ -276,10 +281,10 @@ FILE *arquivo = fopen("./Dados/DadosDosVendedores.txt", "r");
 
     printf("\n--- Lista de Vendedores ---\n");
     while (fgets(linha, sizeof(linha), arquivo)) {
-        if (sscanf(linha, "%d,%49[^,],%49[^,],%19[^,],%f,%f",
-                   &v.id, v.nome, v.email, v.telefone, &v.salarioFixo, &v.comissao) == 6) {
-            printf("ID: %d | Nome: %s | Email: %s | Telefone: %s | Salário: R$%.2f | Comissão: R$%.2f\n",
-                   v.id, v.nome, v.email, v.telefone, v.salarioFixo, v.comissao);
+        if (sscanf(linha, "%d,%49[^,],%f,%f",
+                   &v.id, v.nome, &v.salarioFixo, &v.comissao) == 4) {
+            printf("ID: %d | Nome: %s | Salário: R$%.2f | Comissão: R$%.2f\n",
+                   v.id, v.nome, v.salarioFixo, v.comissao);
         }
     }
 
@@ -307,19 +312,20 @@ void ExcluirVendedor() {
     Vendedor v;
 
     while (fgets(linha, sizeof(linha), arquivoOriginal)) {
-        if (sscanf(linha, "%d,%49[^,],%49[^,],%19[^,],%f,%f",
-                   &v.id, v.nome, v.email, v.telefone, &v.salarioFixo, &v.comissao) == 6) {
+        if (sscanf(linha, "%d,%49[^,],%f,%f",
+                   &v.id, v.nome, &v.salarioFixo, &v.comissao) == 4) {
 
             if (v.id == codigo) {
                 encontrado = 1;
                 printf("Vendedor '%s' excluído com sucesso.\n", v.nome);
-                continue; // Não escreve no novo arquivo
+                continue;
             }
 
-            fprintf(arquivoTemp, "%d,%s,%s,%s,%.2f,%.2f\n",
-                    v.id, v.nome, v.email, v.telefone, v.salarioFixo, v.comissao);
+            fprintf(arquivoTemp, "%d,%s,%.2f,%.2f\n",
+                    v.id, v.nome, v.salarioFixo, v.comissao);
         }
     }
+
 
     fclose(arquivoOriginal);
     fclose(arquivoTemp);
@@ -353,8 +359,8 @@ void EditarVendedor() {
     Vendedor v;
 
     while (fgets(linha, sizeof(linha), arquivoOriginal)) {
-        if (sscanf(linha, "%d,%49[^,],%49[^,],%19[^,],%f,%f",
-                   &v.id, v.nome, v.email, v.telefone, &v.salarioFixo, &v.comissao) == 6) {
+       if (sscanf(linha, "%d,%49[^,],%f,%f",
+                   &v.id, v.nome, &v.salarioFixo, &v.comissao) == 4) {
 
             if (v.id == codigo) {
                 encontrado = 1;
@@ -364,21 +370,13 @@ void EditarVendedor() {
                 fgets(v.nome, sizeof(v.nome), stdin);
                 v.nome[strcspn(v.nome, "\n")] = '\0';
 
-                printf("Digite o novo email: ");
-                fgets(v.email, sizeof(v.email), stdin);
-                v.email[strcspn(v.email, "\n")] = '\0';
-
-                printf("Digite o novo telefone: ");
-                fgets(v.telefone, sizeof(v.telefone), stdin);
-                v.telefone[strcspn(v.telefone, "\n")] = '\0';
-
                 printf("Digite o novo salário fixo: ");
                 scanf("%f", &v.salarioFixo);
                 getchar();
             }
 
-            fprintf(arquivoTemp, "%d,%s,%s,%s,%.2f,%.2f\n",
-                    v.id, v.nome, v.email, v.telefone, v.salarioFixo, v.comissao);
+            fprintf(arquivoTemp, "%d,%s,%.2f,%.2f\n",
+                    v.id, v.nome, v.salarioFixo, v.comissao);
         }
     }
 
