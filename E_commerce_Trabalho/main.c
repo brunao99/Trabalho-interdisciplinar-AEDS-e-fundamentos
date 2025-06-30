@@ -30,7 +30,42 @@ typedef struct vendaitem_ {
     int quantidade_comprada_produto;
     float totalVenda;
 } VendaItem;
+// Protótipo da função de Nota Fiscal
+void emitirNotaFiscal(char nome[], char endereco[], float totalCompra);
 
+// Criação da struct de Nota Fiscal #Matheus
+typedef struct nota_fiscal {
+    char nome_cliente[100];
+    char endereco_entrega[150];
+    float total_compra;
+    float frete;
+    float total_final;
+} NotaFiscal;
+
+// Função para emitir Nota Fiscal #Matheus
+void emitirNotaFiscal(char nome[], char endereco[], float totalCompra) {
+    NotaFiscal nf;
+    strcpy(nf.nome_cliente, nome);
+    strcpy(nf.endereco_entrega, endereco);
+    nf.total_compra = totalCompra;
+
+    if (totalCompra <= 100.0)
+        nf.frete = 30.0;
+    else if (totalCompra <= 300.0)
+        nf.frete = 20.0;
+    else
+        nf.frete = 0.0;
+
+    nf.total_final = nf.total_compra + nf.frete;
+
+    printf("\n===== NOTA FISCAL =====\n");
+    printf("Cliente: %s\n", nf.nome_cliente);
+    printf("Endereço: %s\n", nf.endereco_entrega);
+    printf("Total da compra: R$ %.2f\n", nf.total_compra);
+    printf("Frete: R$ %.2f\n", nf.frete);
+    printf("TOTAL FINAL: R$ %.2f\n", nf.total_final);
+    printf("========================\n\n");
+}
 
 
 void EditarProduto() {
@@ -504,7 +539,22 @@ case 4:
    // menu_vendas();
     break;
 case 5:
-   // menu_nota_fiscal();
+   char nomeCliente[50], enderecoEntrega[100];
+    float totalCompra;
+
+    getchar(); // limpar buffer
+    printf("Nome do cliente: ");
+    fgets(nomeCliente, sizeof(nomeCliente), stdin);
+    nomeCliente[strcspn(nomeCliente, "\n")] = '\0';
+
+    printf("Endereço de entrega: ");
+    fgets(enderecoEntrega, sizeof(enderecoEntrega), stdin);
+    enderecoEntrega[strcspn(enderecoEntrega, "\n")] = '\0';
+
+    printf("Valor total da compra: R$ ");
+    scanf("%f", &totalCompra);
+
+    emitirNotaFiscal(nomeCliente, enderecoEntrega, totalCompra);
     break;
 case 6:
     break;
