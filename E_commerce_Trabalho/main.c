@@ -16,6 +16,14 @@ typedef struct vendedores {
     float salarioFixo;
     float comissao;
 } Vendedor;
+
+// Criação da struct dos itens que vão ir na venda #Rafael Abras
+typedef struct vendaitem_ {
+    produtos Produto;
+    int quantidade_comprada_produto;
+    float totalVenda;
+} VendaItem;
+
 // Criação da struct das vendas #Rafael Abras
 typedef struct venda {
     int codigoDaVenda;
@@ -23,13 +31,7 @@ typedef struct venda {
     int quantidadeItens;
     float totalVenda;
 } Vendas;
-// Criação da struct dos itens que vão ir na venda #Rafael Abras
 
-typedef struct vendaitem_ {
-    produtos Produto;
-    int quantidade_comprada_produto;
-    float totalVenda;
-} VendaItem;
 // Protótipo da função de Nota Fiscal
 void emitirNotaFiscal(char nome[], char endereco[], float totalCompra);
 
@@ -216,6 +218,108 @@ void VerificarProdutosComEstoqueDisponivel() {
 
     fclose(arquivo);
 }
+
+//Criar arquivo de vendas #Rafael Abras
+void CriarVendasArquivoDados() {
+    const char *nomearquivo = "./Dados/DadosDasVendas.txt";
+    FILE *f = fopen(nomearquivo, "r");
+    if (f) fclose(f);
+    else {
+        FILE *novo = fopen(nomearquivo, "w");
+        fclose(novo);
+    }
+}
+
+//Registrar vendas #Rafael Abras
+void RegistrarVenda() {
+    const char *nomeArquivoProdutos = "./Dados/DadosDosProdutos.txt";
+    const char *nomeArquivoVendas = "./Dados/DadosDasVendas.txt";
+
+    FILE *arquivoProdutos = fopen(nomeArquivoProdutos, "r");
+    if (!arquivoProdutos) {
+        printf("Erro ao abrir o arquivo de produtos.\n");
+        return;
+    }
+
+    Vendas novaVenda;
+    novaVenda.codigoDaVenda = rand() % 10000 + 1;
+    novaVenda.quantidadeItens = 0;
+    novaVenda.totalVenda = 0;
+
+    int continuar = 1;
+    while (continuar && novaVenda.quantidadeItens < 10) {
+        int codigoProduto, quantidadeDesejada;
+        produtos temp;
+        int encontrado = 0;
+        rewind(arquivoProdutos);
+
+        printf("\nDigite o código do produto: ");
+        scanf("%d", &codigoProduto);
+
+        char linha[200];
+        while (fgets(linha, sizeof(linha), arquivoProdutos)) {
+            if (sscanf(linha, "%49[^,],%d,%d,%d", temp.nome_produto, &temp.codigo_produto,
+                       &temp.qnt_estoque_produto, &temp.preco_venda_produto) == 4) {
+
+                if (temp.codigo_produto == codigoProduto) {
+                    encontrado = 1;
+                    printf("Produto encontrado: %s\n", temp.nome_produto);
+                    printf("Quantidade em estoque: %d\n", temp.qnt_estoque_produto);
+                    printf("Digite a quantidade desejada: ");
+                    scanf("%d", &quantidadeDesejada);
+
+                    if (quantidadeDesejada > temp.qnt_estoque_produto) {
+                        printf("Quantidade insuficiente em estoque.\n");
+                        break;
+                    }
+
+                    VendaItem item;
+                    item.Produto = temp;
+                    item.quantidade_comprada_produto = quantidadeDesejada;
+                    item.totalVenda = quantidadeDesejada * temp.preco_venda_produto;
+
+                    novaVenda.ProdutosVenda[novaVenda.quantidadeItens++] = item;
+                    novaVenda.totalVenda += item.totalVenda;
+                    printf("Item adicionado com sucesso!\n");
+                    break;
+                }
+            }
+        }
+
+        if (!encontrado) {
+            printf("Produto com código %d não encontrado.\n", codigoProduto);
+        }
+
+        printf("Deseja adicionar outro produto? (1 - Sim / 0 - Nao): ");
+        scanf("%d", &continuar);
+    }
+
+    fclose(arquivoProdutos);
+
+    FILE *arquivoVendas = fopen(nomeArquivoVendas, "a");
+    if (!arquivoVendas) {
+        printf("Erro ao abrir arquivo de vendas.\n");
+        return;
+    }
+
+    fprintf(arquivoVendas, "Venda #%d\n", novaVenda.codigoDaVenda);
+    for (int i = 0; i < novaVenda.quantidadeItens; i++) {
+        VendaItem item = novaVenda.ProdutosVenda[i];
+        fprintf(arquivoVendas, "%s,%d,%d,%d,%.2f\n",
+                item.Produto.nome_produto,
+                item.Produto.codigo_produto,
+                item.quantidade_comprada_produto,
+                item.Produto.preco_venda_produto,
+                item.totalVenda);
+    }
+    fprintf(arquivoVendas, "Total da Venda: %.2f\n\n", novaVenda.totalVenda);
+
+    fclose(arquivoVendas);
+
+    printf("Venda registrada com sucesso! Total: R$%.2f\n", novaVenda.totalVenda);
+}
+
+
 
 //A persistencia dos dados sera criada em uma funcao responsavel por criar
 //o arquivo.txt # Rafael Abras
@@ -538,11 +642,11 @@ case 3:
 case 4:
    // menu_vendas();
     break;
-case 5:
+case 5:{
    char nomeCliente[50], enderecoEntrega[100];
     float totalCompra;
 
-    getchar(); // limpar buffer
+    getchar();
     printf("Nome do cliente: ");
     fgets(nomeCliente, sizeof(nomeCliente), stdin);
     nomeCliente[strcspn(nomeCliente, "\n")] = '\0';
@@ -556,6 +660,7 @@ case 5:
 
     emitirNotaFiscal(nomeCliente, enderecoEntrega, totalCompra);
     break;
+    }
 case 6:
     break;
 }
@@ -563,6 +668,7 @@ case 6:
 
 int main()
 {
+    CriarVendasArquivoDados();
     CriarVendedoresArquivoDados();
     menu_principal();
     return 0;
