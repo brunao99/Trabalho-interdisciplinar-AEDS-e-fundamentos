@@ -4,6 +4,77 @@
 #### Aqui vai persistir a documentação do trabalho, casos de teste, fotos de sprint, etc...
 # Casos de Teste - Sistema de E-commerce em C
 
+# 📦 Sistema de E-commerce em C
+
+## 1. Introdução
+
+### 1.1. Objetivo
+Este projeto implementa um sistema de e-commerce desenvolvido em linguagem C, permitindo o gerenciamento de produtos, vendedores, compradores, vendas e emissão de notas fiscais. Foi desenvolvido como parte de um trabalho interdisciplinar entre as disciplinas de **Algoritmos e Estruturas de Dados (AEDS)** e **Fundamentos de Engenharia de Software**.
+
+### 1.2. Escopo
+
+O sistema contempla as seguintes funcionalidades:
+- ✅ Cadastro de Produtos (CRUD)  
+- ✅ Cadastro de Vendedores (CRUD)  
+- ✅ Cadastro de Compradores (CRUD)  
+- ✅ Registro de Vendas (com controle de estoque)  
+- ✅ Emissão de Nota Fiscal (com cálculo de frete)  
+- ✅ Testes e Validações (documentação e casos de teste)
+
+### 1.3. Tecnologias Utilizadas
+
+| Item                 | Descrição           |
+|----------------------|---------------------|
+| Linguagem            | C (ISO C99)         |
+| Compilador           | GCC                 |
+| Sistemas Operacionais| Windows / Linux     |
+| Versionamento        | Git (opcional)      |
+| Testes               | Testes manuais      |
+
+---
+
+## 2. Arquitetura do Sistema
+
+### 2.1. Estrutura de Dados
+
+As principais entidades do sistema são representadas por structs:
+
+```c
+typedef struct new_produtos {
+    char nome_produto[50];
+    int codigo_produto;
+    int qnt_estoque_produto;
+    int preco_venda_produto;
+} produtos;
+
+typedef struct vendedores {
+    int id;
+    char nome[50];
+    float salarioFixo;
+    float comissao;
+} Vendedor;
+
+typedef struct comprador {
+    int id;
+    char nome[50];
+    char cpf[12];
+    char email[50];
+    char rua[50];
+    char bairro[50];
+    char cidade[50];
+    char estado[3];
+    char cep[10];
+} Comprador;
+
+typedef struct venda {
+    int codigoDaVenda;
+    int idVendedor;
+    VendaItem ProdutosVenda[10];
+    int quantidadeItens;
+    float totalVenda;
+} Vendas;
+
+
 ## 🧪 1. Menu de Produtos
 
 ### ✅ Teste 1.2 – Cadastro com código duplicado
@@ -139,6 +210,7 @@
 **Entradas**: CPF: "12345678900"  
 **Saída esperada**:  
 `"Comprador excluído com sucesso."`
+
 
 
 ## 👥 Integrantes
