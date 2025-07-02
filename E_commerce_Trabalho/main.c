@@ -38,7 +38,7 @@ typedef struct comprador {
     char rua[50];
     char bairro[50];
     char cidade[50];
-    char estado[3]; // UF
+    char estado[3]; //
     char cep[10]; // 8 digitos + '\0'
 } Comprador;
 
@@ -82,13 +82,11 @@ void emitirNotaFiscal(int idComprador, int codigoVenda) {
     Comprador c;
     char linha[512];
     int compradorEncontrado = 0;
-
-    // Leitura do comprador com parsing manual robusto
     while (fgets(linha, sizeof(linha), arquivoCompradores)) {
-        // Conta vírgulas para garantir formato esperado
+
         int numVirgulas = 0;
         for (int i = 0; linha[i] != '\0'; i++) if (linha[i] == ',') numVirgulas++;
-        if (numVirgulas != 8) continue; // pula linhas mal formatadas
+        if (numVirgulas != 8) continue;
 
         char *campos[9] = {NULL};
         int campoIndex = 0;
@@ -103,8 +101,7 @@ void emitirNotaFiscal(int idComprador, int codigoVenda) {
             }
             ptr++;
         }
-        campos[campoIndex] = inicioCampo; // último campo
-
+        campos[campoIndex] = inicioCampo;
         if (campoIndex == 8) {
             c.id = atoi(campos[0]);
             strcpy(c.nome, campos[1]);
@@ -137,7 +134,7 @@ void emitirNotaFiscal(int idComprador, int codigoVenda) {
         if (strncmp(linha, "Venda #", 7) == 0) {
             int codVendaArquivo, idVendedor;
             if (sscanf(linha, "Venda #%d,Vendedor ID: %d", &codVendaArquivo, &idVendedor) == 2) {
-                if (codVendaArquivo != codigoVenda) continue; // não é a venda que queremos
+                if (codVendaArquivo != codigoVenda) continue;
                 vendaEncontrada = 1;
                 v.codigoDaVenda = codVendaArquivo;
                 v.idVendedor = idVendedor;
@@ -146,7 +143,7 @@ void emitirNotaFiscal(int idComprador, int codigoVenda) {
 
                 while (fgets(linha, sizeof(linha), arquivoVendas)) {
                     if (strncmp(linha, "Total", 5) == 0) break;
-                    if (strlen(linha) < 3) continue; // ignora linhas vazias ou curtas
+                    if (strlen(linha) < 3) continue;
 
                     VendaItem item;
                     if (sscanf(linha, "%49[^,],%d,%d,%d,%f",
@@ -415,10 +412,8 @@ int buscarVendedorPorId(int id, Vendedor *v) {
     int encontrado = 0;
 
     while (fgets(linha, sizeof(linha), arquivo)) {
-        // Remover quebra de linha
         linha[strcspn(linha, "\n")] = 0;
 
-        // Tentar ler a linha
         if (sscanf(linha, "%d,%49[^,],%f,%f",
                    &v->id, v->nome, &v->salarioFixo, &v->comissao) == 4) {
             if (v->id == id) {
@@ -637,13 +632,11 @@ void RegistrarVenda() {
 
     atualizarEstoqueAposVenda(novaVenda.ProdutosVenda, novaVenda.quantidadeItens);
 
-    // Aplicar comissão
     float bonus = novaVenda.totalVenda * 0.03f;
     vendedor.comissao += bonus;
     printf("\nComissao aplicada: R$%.2f\n", bonus);
     printf("Comissao total do vendedor: R$%.2f\n", vendedor.comissao);
 
-    // Atualizar vendedor no arquivo
     FILE *arquivoVendedores = fopen("./Dados/DadosDosVendedores.txt", "r+");
     if (!arquivoVendedores) {
         printf("Erro ao abrir arquivo de vendedores para atualizacao.\n");
@@ -712,7 +705,7 @@ int ObterUltimoCodigoProduto(const char *nomearquivo) {
     while (fgets(linha, sizeof(linha), arquivo)) {
         int codigo;
         if (sscanf(linha, "%*[^,],%d,%*d,%*d", &codigo) == 1) {
-            ultimoCodigo = codigo; // sempre atualiza com o último lido
+            ultimoCodigo = codigo;
         }
     }
 
@@ -761,7 +754,7 @@ void CadastrarProduto() {
     printf("Digite a quantidade em estoque: ");
     if (scanf("%d", &quantidade_estoque) != 1) {
         printf("Valor invalido para quantidade.\n");
-        while (getchar() != '\n'); // limpa buffer
+        while (getchar() != '\n');
         return;
     }
 
@@ -880,6 +873,32 @@ void ExcluirVendedor() {
         printf("Vendedor com ID %d nao encontrado.\n", codigo);
 }
 
+int validarCEP(const char *cep) {
+    if (strlen(cep) != 8) return 0;
+    for (int i = 0; i < 8; i++) {
+        if (!isdigit(cep[i])) return 0;
+    }
+    return 1;
+}
+
+
+int validarEstado(const char *estado) {
+    if (strlen(estado) != 2) return 0;
+    for (int i = 0; i < 2; i++) {
+        if (!isalpha(estado[i])) return 0;
+    }
+    return 1;
+}
+
+
+int validarCPF(const char *cpf) {
+    if (strlen(cpf) != 11) return 0;
+    for (int i = 0; i < 11; i++) {
+        if (!isdigit(cpf[i])) return 0;
+    }
+    return 1;
+}
+
 void cadastrarComprador() {
     FILE *arquivo = fopen("./Dados/DadosDosCompradores.txt", "a+");
     if (!arquivo) {
@@ -889,52 +908,91 @@ void cadastrarComprador() {
 
     Comprador c;
     int ultimoId = 0;
-    char linha[200];
+    char linha[512];
 
+    rewind(arquivo);
     while (fgets(linha, sizeof(linha), arquivo)) {
-        sscanf(linha, "%d,%*[^,],%*[^,],%*[^,],%*[^,],%*[^,],%*[^,],%*[^,],%*[^,]", &ultimoId);
+        int numVirgulas = 0;
+        for (int i = 0; linha[i] != '\0'; i++) {
+            if (linha[i] == ',') numVirgulas++;
+        }
+        if (numVirgulas == 8) {
+            int id;
+            if (sscanf(linha, "%d,%*[^,],%*[^,],%*[^,],%*[^,],%*[^,],%*[^,],%*[^,],%*[^,]", &id) == 1) {
+                ultimoId = id > ultimoId ? id : ultimoId;
+            }
+        }
     }
 
     c.id = ultimoId + 1;
 
-    getchar();
+    while (getchar() != '\n');
+
     printf("Nome do comprador: ");
     fgets(c.nome, sizeof(c.nome), stdin);
     c.nome[strcspn(c.nome, "\n")] = '\0';
+    if (strlen(c.nome) == 0) {
+        printf("Nome nao pode ser vazio.\n");
+        fclose(arquivo);
+        return;
+    }
 
-    printf("CPF (apenas numeros): ");
-    fgets(c.cpf, sizeof(c.cpf), stdin);
-    c.cpf[strcspn(c.cpf, "\n")] = '\0';
+    do {
+        printf("CPF (apenas numeros, 11 digitos): ");
+        fgets(c.cpf, sizeof(c.cpf), stdin);
+        c.cpf[strcspn(c.cpf, "\n")] = '\0';
+        if (!validarCPF(c.cpf)) {
+            printf("CPF invalido. Deve conter exatamente 11 digitos numericos.\n");
+        }
+    } while (!validarCPF(c.cpf));
+
+    while (getchar() != '\n');
 
     printf("E-mail: ");
     fgets(c.email, sizeof(c.email), stdin);
     c.email[strcspn(c.email, "\n")] = '\0';
+    if (strlen(c.email) == 0) strcpy(c.email, "sem@email.com");
 
     printf("Rua: ");
     fgets(c.rua, sizeof(c.rua), stdin);
     c.rua[strcspn(c.rua, "\n")] = '\0';
+    if (strlen(c.rua) == 0) strcpy(c.rua, "Sem rua informada");
 
     printf("Bairro: ");
     fgets(c.bairro, sizeof(c.bairro), stdin);
     c.bairro[strcspn(c.bairro, "\n")] = '\0';
+    if (strlen(c.bairro) == 0) strcpy(c.bairro, "Sem bairro informado");
 
     printf("Cidade: ");
     fgets(c.cidade, sizeof(c.cidade), stdin);
     c.cidade[strcspn(c.cidade, "\n")] = '\0';
+    if (strlen(c.cidade) == 0) strcpy(c.cidade, "Sem cidade informada");
 
-    printf("Estado (UF): ");
-    fgets(c.estado, sizeof(c.estado), stdin);
-    c.estado[strcspn(c.estado, "\n")] = '\0';
+    do {
+        printf("Estado (UF, 2 letras): ");
+        fgets(c.estado, sizeof(c.estado), stdin);
+        c.estado[strcspn(c.estado, "\n")] = '\0';
+        if (!validarEstado(c.estado)) {
+            printf("Estado invalido. Deve conter exatamente 2 letras.\n");
+        }
+    } while (!validarEstado(c.estado));
 
-    printf("CEP: ");
-    fgets(c.cep, sizeof(c.cep), stdin);
-    c.cep[strcspn(c.cep, "\n")] = '\0';
+    while (getchar() != '\n');
+
+    do {
+        printf("CEP (apenas numeros, 8 digitos): ");
+        fgets(c.cep, sizeof(c.cep), stdin);
+        c.cep[strcspn(c.cep, "\n")] = '\0';
+        if (!validarCEP(c.cep)) {
+            printf("CEP invalido. Deve conter exatamente 8 digitos numericos.\n");
+        }
+    } while (!validarCEP(c.cep));
 
     fprintf(arquivo, "%d,%s,%s,%s,%s,%s,%s,%s,%s\n",
             c.id, c.nome, c.cpf, c.email, c.rua, c.bairro, c.cidade, c.estado, c.cep);
 
     fclose(arquivo);
-    printf("Comprador cadastrado com sucesso!\n");
+    printf("Comprador cadastrado com sucesso! ID: %d\n", c.id);
 }
 
 void EditarVendedor() {
@@ -1102,73 +1160,127 @@ void editarComprador() {
     const char *arquivoTemp = "./Dados/temp.txt";
 
     FILE *orig = fopen(arquivoOriginal, "r");
+    if (!orig) {
+        printf("Erro ao abrir arquivo de compradores.\n");
+        return;
+    }
+
     FILE *temp = fopen(arquivoTemp, "w");
-    if (!orig || !temp) {
-        printf("Erro ao abrir arquivos.\n");
+    if (!temp) {
+        printf("Erro ao criar arquivo temporario.\n");
+        fclose(orig);
         return;
     }
 
     int id;
     printf("Digite o ID do comprador a ser editado: ");
-    scanf("%d", &id);
+    if (scanf("%d", &id) != 1) {
+        printf("ID invalido.\n");
+        fclose(orig);
+        fclose(temp);
+        return;
+    }
     getchar();
 
     Comprador c;
-    char linha[200];
+    char linha[512];
     int encontrado = 0;
 
     while (fgets(linha, sizeof(linha), orig)) {
         linha[strcspn(linha, "\n")] = '\0';
-        if (sscanf(linha, "%d,%49[^,],%11[^,],%49[^,],%49[^,],%49[^,],%49[^,],%2[^,],%9[^\n]",
-                   &c.id, c.nome, c.cpf, c.email, c.rua, c.bairro, c.cidade, c.estado, c.cep) == 9) {
-            if (c.id == id) {
-                encontrado = 1;
-                printf("Novo nome: ");
-                fgets(c.nome, sizeof(c.nome), stdin);
-                c.nome[strcspn(c.nome, "\n")] = '\0';
 
-                printf("Novo CPF (apenas numeros): ");
-                fgets(c.cpf, sizeof(c.cpf), stdin);
-                c.cpf[strcspn(c.cpf, "\n")] = '\0';
+        int numVirgulas = 0;
+        for (int i = 0; linha[i] != '\0'; i++) {
+            if (linha[i] == ',') numVirgulas++;
+        }
+        if (numVirgulas != 8) {
+            fprintf(temp, "%s\n", linha);
+            continue;
+        }
 
-                printf("Novo e-mail: ");
-                fgets(c.email, sizeof(c.email), stdin);
-                c.email[strcspn(c.email, "\n")] = '\0';
+        char *campos[9] = {NULL};
+        int campoIndex = 0;
+        char *ptr = linha;
+        char *inicioCampo = ptr;
 
-                printf("Nova rua: ");
-                fgets(c.rua, sizeof(c.rua), stdin);
-                c.rua[strcspn(c.rua, "\n")] = '\0';
-
-                printf("Novo bairro: ");
-                fgets(c.bairro, sizeof(c.bairro), stdin);
-                c.bairro[strcspn(c.bairro, "\n")] = '\0';
-
-                printf("Nova cidade: ");
-                fgets(c.cidade, sizeof(c.cidade), stdin);
-                c.cidade[strcspn(c.cidade, "\n")] = '\0';
-
-                printf("Novo estado (UF): ");
-                fgets(c.estado, sizeof(c.estado), stdin);
-                c.estado[strcspn(c.estado, "\n")] = '\0';
-
-                printf("Novo CEP: ");
-                fgets(c.cep, sizeof(c.cep), stdin);
-                c.cep[strcspn(c.cep, "\n")] = '\0';
+        while (*ptr && campoIndex < 9) {
+            if (*ptr == ',') {
+                *ptr = '\0';
+                campos[campoIndex++] = inicioCampo;
+                inicioCampo = ptr + 1;
             }
+            ptr++;
+        }
+        campos[campoIndex] = inicioCampo;
+
+        if (campoIndex == 8 && atoi(campos[0]) == id) {
+            encontrado = 1;
+            printf("Comprador encontrado: %s\n", campos[1]);
+
+
+            printf("Novo nome: ");
+            fgets(c.nome, sizeof(c.nome), stdin);
+            c.nome[strcspn(c.nome, "\n")] = '\0';
+            if (strlen(c.nome) == 0) strcpy(c.nome, campos[1]);
+
+            printf("Novo CPF (apenas numeros, 11 digitos): ");
+            fgets(c.cpf, sizeof(c.cpf), stdin);
+            c.cpf[strcspn(c.cpf, "\n")] = '\0';
+            if (strlen(c.cpf) != 11 || !isdigit(c.cpf[0])) strcpy(c.cpf, campos[2]);
+
+            printf("Novo e-mail: ");
+            fgets(c.email, sizeof(c.email), stdin);
+            c.email[strcspn(c.email, "\n")] = '\0';
+            if (strlen(c.email) == 0) strcpy(c.email, campos[3]);
+
+            printf("Nova rua: ");
+            fgets(c.rua, sizeof(c.rua), stdin);
+            c.rua[strcspn(c.rua, "\n")] = '\0';
+            if (strlen(c.rua) == 0) strcpy(c.rua, campos[4]);
+
+            printf("Novo bairro: ");
+            fgets(c.bairro, sizeof(c.bairro), stdin);
+            c.bairro[strcspn(c.bairro, "\n")] = '\0';
+            if (strlen(c.bairro) == 0) strcpy(c.bairro, campos[5]);
+
+            printf("Nova cidade: ");
+            fgets(c.cidade, sizeof(c.cidade), stdin);
+            c.cidade[strcspn(c.cidade, "\n")] = '\0';
+            if (strlen(c.cidade) == 0) strcpy(c.cidade, campos[6]);
+
+            printf("Novo estado (UF, 2 letras): ");
+            fgets(c.estado, sizeof(c.estado), stdin);
+            fgets(c.estado, sizeof(c.estado), stdin);
+            c.estado[strcspn(c.estado, "\n")] = '\0';
+            if (strlen(c.estado) != 2) strcpy(c.estado, campos[7]);
+
+            printf("Novo CEP (8 digitos): ");
+            fgets(c.cep, sizeof(c.cep), stdin);
+            c.cep[strcspn(c.cep, "\n")] = '\0';
+            if (strlen(c.cep) != 8) strcpy(c.cep, campos[8]);
+
             fprintf(temp, "%d,%s,%s,%s,%s,%s,%s,%s,%s\n",
-                    c.id, c.nome, c.cpf, c.email, c.rua, c.bairro, c.cidade, c.estado, c.cep);
+                    id, c.nome, c.cpf, c.email, c.rua, c.bairro, c.cidade, c.estado, c.cep);
+        } else {
+
+            fprintf(temp, "%s\n", linha);
         }
     }
 
     fclose(orig);
     fclose(temp);
-    remove(arquivoOriginal);
-    rename(arquivoTemp, arquivoOriginal);
 
-    if (encontrado)
+    if (remove(arquivoOriginal) != 0) {
+        perror("Erro ao remover arquivo original");
+    } else if (rename(arquivoTemp, arquivoOriginal) != 0) {
+        perror("Erro ao renomear arquivo temporario");
+    }
+
+    if (encontrado) {
         printf("Comprador editado com sucesso!\n");
-    else
+    } else {
         printf("Comprador com ID %d nao encontrado.\n", id);
+    }
 }
 
 void menu_produtos() {
@@ -1269,7 +1381,7 @@ void menu_principal() {
     int flag;
     do {
         limparTela();
-        printf("\n====== E-commerce do Djabe e da Mafe ======\n");
+        printf("\n====== E-commerce ======\n");
         printf("1. Produtos\n");
         printf("2. Vendedores\n");
         printf("3. Compradores\n");
