@@ -3,7 +3,6 @@
 ## 📋 Backlog do Trabalho
 #### Aqui vai persistir a documentação do trabalho, casos de teste, fotos de sprint, etc...
 
-
 # 📦 Sistema de E-commerce em C
 
 ## 1. Introdução
@@ -112,6 +111,37 @@ Esta seção descreve as funções principais do sistema de e-commerce em C, sep
 | `EditarComprador()`      | Permite modificar dados de um comprador.                                   |
 | `ExcluirComprador()`     | Remove o cadastro de um comprador.                                         |
 | `ListarCompradores()`    | Exibe todos os compradores registrados no sistema.
+
+💰 4. Módulo de Vendas
+| Função                   | Descrição                                                                  |
+|--------------------------|----------------------------------------------------------------------------|
+| RegistrarVenda()       | Registra uma nova venda, verifica estoque, calcula total e comissões.      |
+| AtualizarEstoque()     | Subtrai do estoque os produtos vendidos.                                   |
+| AtualizarSaldoVendedor()| Soma comissão ao vendedor envolvido na venda.                             |
+| ListarVendas()         | Exibe todas as vendas realizadas no sistema.                               |
+
+---
+
+🧾 5. Nota Fiscal
+| Função               | Descrição                                                                  |
+|----------------------|----------------------------------------------------------------------------|
+| EmitirNotaFiscal() | Gera uma nota fiscal com dados do comprador, vendedor, produtos e frete.   |
+| CalcularFrete()    | Aplica regra de frete:                                                     |
+|                      | - R$ 30,00 para compras até R$ 100                                          |
+|                      | - R$ 20,00 para compras até R$ 300                                          |
+|                      | - Frete grátis para compras acima de R$ 300                                 |
+
+---
+
+🛠️ 6. Utilitários e Validações
+| Função                    | Descrição                                                              |
+|---------------------------|------------------------------------------------------------------------|
+| CriarArquivosInicializacao() | Cria os arquivos .txt e diretórios necessários no início da execução. |
+| ValidarEstoqueDisponivel()   | Verifica se há estoque suficiente para realizar a venda.            |
+| ValidarIDUnico()             | Garante que IDs de produtos, compradores e vendedores não se repitam. |
+
+---
+
 
 # Casos de Teste - Sistema de E-commerce em C
 
