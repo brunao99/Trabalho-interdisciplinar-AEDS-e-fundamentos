@@ -1,0 +1,37 @@
+Venda #6757,Vendedor ID: 1
+teste3,3,40,100,4000.00
+Total da Venda: 4000.00
+
+Venda #4905,Vendedor ID: 2
+PorraNaoLembro,2,1,9999,9999.00
+BarrilOFAlotOfGlobinsYamal,5,1,3000000,3000000.00
+Total da Venda: 3009999.00
+
+Venda #3013,Vendedor ID: 2
+EsqueletinhoDoEscudo,3,2,5000000,10000000.00
+Total da Venda: 10000000.00
+
+Venda #6527,Vendedor ID: 2
+teste12345,6,2,50,100.00
+Total da Venda: 100.00
+
+Venda #9626,Vendedor ID: 2
+testecomissao,7,2,30,60.00
+Total da Venda: 60.00
+
+Venda #913,Vendedor ID: 2
+produtofinal,8,2,30,60.00
+Total da Venda: 60.00
+
+Venda #986,Vendedor ID: 1
+produtofinal,8,1,30,30.00
+Total da Venda: 30.00
+
+Venda #4389,Vendedor ID: 2
+novo,9,20,10,200.00
+Total da Venda: 200.00
+
+Venda #9872,Vendedor ID: 2
+bruno,10,3,50,150.00
+Total da Venda: 150.00
+

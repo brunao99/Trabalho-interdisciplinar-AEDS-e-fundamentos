@@ -1,0 +1,4 @@
+1,WaitingForAnInvite,1312341,grrls@gmail.com,grr,grr,grr,gr,
+2,nome,12314151,nome@gmail.com,nome,nome,nome,UF,
+3,Esquelitinho,124124,1@gmail.com,TorreDaPrincesa,ArenaDoGelo,BarrilDeGoblins,AM,
+4,teste,1321312,teste@gmail.com,teste,teste,teste,te,
