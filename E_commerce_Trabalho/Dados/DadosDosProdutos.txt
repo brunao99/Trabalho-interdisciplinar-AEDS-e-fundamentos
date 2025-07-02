@@ -1,9 +1,0 @@
-PorraNaoLembro,2,0,9999
-EsqueletinhoDoEscudo,3,1,5000000
-BarrilOFAlotOfGlobinsYamal,5,0,3000000
-teste12345,6,0,50
-testecomissao,7,1,30
-produtofinal,8,0,30
-novo,9,10,10
-bruno,10,0,50
-teste,11,2,5
