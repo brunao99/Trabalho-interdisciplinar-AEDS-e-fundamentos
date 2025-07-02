@@ -5,4 +5,5 @@ teste12345,6,0,50
 testecomissao,7,1,30
 produtofinal,8,0,30
 novo,9,10,10
-bruno,10,2,50
+bruno,10,0,50
+teste,11,2,5

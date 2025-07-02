@@ -1,2 +1,2 @@
 1,VendedorLicitador,500.00,0.00
-2,LancadorRoxo,250.00,0.00
+2,LancadorRoxo,250.00,0.45

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <ctype.h>
 
 // limpar tela para melhor interacao com o usuario
 void limparTela() {
@@ -12,7 +13,7 @@ void limparTela() {
     #endif
 }
 
-// Criacao da struct dos produtos #Bruno Henrique
+// Criacao da struct dos produtos
 typedef struct new_produtos {
     char nome_produto[50];
     int codigo_produto;
@@ -20,7 +21,7 @@ typedef struct new_produtos {
     int preco_venda_produto;
 } produtos;
 
-// Criacao da struct dos vendedores #Matheus
+// Criacao da struct dos vendedores
 typedef struct vendedores {
     int id;
     char nome[50];
@@ -28,7 +29,7 @@ typedef struct vendedores {
     float comissao;
 } Vendedor;
 
-// Criacao da struct dos compradores #Bruno Henrique
+// Criacao da struct dos compradores
 typedef struct comprador {
     int id;
     char nome[50];
@@ -41,17 +42,17 @@ typedef struct comprador {
     char cep[10]; // 8 digitos + '\0'
 } Comprador;
 
-// Criacao da struct dos itens que vao ir na venda #Rafael Abras
+// Criacao da struct dos itens que vao ir na venda
 typedef struct vendaitem_ {
     produtos Produto;
     int quantidade_comprada_produto;
     float totalVenda;
 } VendaItem;
 
-// Criacao da struct das vendas #Rafael Abras
+// Criacao da struct das vendas
 typedef struct venda {
     int codigoDaVenda;
-    int idVendedor;  // Novo campo para associar o vendedor
+    int idVendedor;
     VendaItem ProdutosVenda[10];
     int quantidadeItens;
     float totalVenda;
@@ -60,7 +61,7 @@ typedef struct venda {
 // Prototipo da funcao de Nota Fiscal
 void emitirNotaFiscal(int idComprador, int codigoVenda);
 
-// Criacao da struct de Nota Fiscal #Matheus
+// Criacao da struct de Nota Fiscal
 typedef struct nota_fiscal {
     char nome_cliente[100];
     char endereco_entrega[150];
@@ -69,7 +70,7 @@ typedef struct nota_fiscal {
     float total_final;
 } NotaFiscal;
 
-// Funcao para emitir Nota Fiscal #Matheus
+// Funcao para emitir Nota Fiscal
 void emitirNotaFiscal(int idComprador, int codigoVenda) {
     FILE *arquivoCompradores = fopen("./Dados/DadosDosCompradores.txt", "r");
     FILE *arquivoVendas = fopen("./Dados/DadosDasVendas.txt", "r");
@@ -104,10 +105,12 @@ void emitirNotaFiscal(int idComprador, int codigoVenda) {
     int vendaEncontrada = 0;
 
     while (fgets(linha, sizeof(linha), arquivoVendas)) {
-        if (sscanf(linha, "Venda #%d", &v.codigoDaVenda) == 1 && v.codigoDaVenda == codigoVenda) {
+        if (sscanf(linha, "Venda #%d,Vendedor ID: %d", &v.codigoDaVenda, &v.idVendedor) == 2 && v.codigoDaVenda == codigoVenda) {
             vendaEncontrada = 1;
             v.quantidadeItens = 0;
             while (fgets(linha, sizeof(linha), arquivoVendas) && strncmp(linha, "Total", 5) != 0) {
+                if (strlen(linha) < 5) continue;
+
                 VendaItem item;
                 if (sscanf(linha, "%49[^,],%d,%d,%d,%f",
                            item.Produto.nome_produto, &item.Produto.codigo_produto,
@@ -174,7 +177,7 @@ void EditarProduto() {
     int codigo;
     printf("Digite o codigo do produto a ser editado: ");
     scanf("%d", &codigo);
-    getchar(); // Limpa o \n do buffer
+    getchar();
 
     char linha[200];
     int encontrado = 0;
@@ -286,7 +289,6 @@ void ConsultarProdutoArquivoDados() {
     fclose(arquivocomdados);
 }
 
-// Consulta os produtos disponiveis no estoque #Joao Felipe Manferrari
 void VerificarEstoque() {
     const char *nomearquivo = "./Dados/DadosDosProdutos.txt";
     FILE *arquivo = fopen(nomearquivo, "r");
@@ -317,7 +319,6 @@ void VerificarEstoque() {
     fclose(arquivo);
 }
 
-// Criar arquivo de vendas #Rafael Abras
 void CriarVendasArquivoDados() {
     const char *nomearquivo = "./Dados/DadosDasVendas.txt";
     FILE *f = fopen(nomearquivo, "r");
@@ -328,7 +329,6 @@ void CriarVendasArquivoDados() {
     }
 }
 
-// Atualizar estoque apos venda
 void atualizarEstoqueAposVenda(VendaItem itens[], int quantidadeItens) {
     const char *nomearquivo = "./Dados/DadosDosProdutos.txt";
     const char *tempArquivo = "./Dados/temp.txt";
@@ -365,8 +365,6 @@ void atualizarEstoqueAposVenda(VendaItem itens[], int quantidadeItens) {
     rename(tempArquivo, nomearquivo);
 }
 
-
-// Funcao para buscar vendedor por ID #Matheus
 int buscarVendedorPorId(int id, Vendedor *v) {
     FILE *arquivo = fopen("./Dados/DadosDosVendedores.txt", "r");
     if (!arquivo) {
@@ -375,24 +373,26 @@ int buscarVendedorPorId(int id, Vendedor *v) {
     }
 
     char linha[200];
-    while (fgets(linha, sizeof(linha), arquivo)) {
-        // Remove quebra de linha se existir
-        linha[strcspn(linha, "\n")] = '\0';
+    int encontrado = 0;
 
+    while (fgets(linha, sizeof(linha), arquivo)) {
+        // Remover quebra de linha
+        linha[strcspn(linha, "\n")] = 0;
+
+        // Tentar ler a linha
         if (sscanf(linha, "%d,%49[^,],%f,%f",
                    &v->id, v->nome, &v->salarioFixo, &v->comissao) == 4) {
             if (v->id == id) {
-                fclose(arquivo);
-                return 1; // Vendedor encontrado
+                encontrado = 1;
+                break;
             }
         }
     }
 
     fclose(arquivo);
-    return 0; // Vendedor nao encontrado
+    return encontrado;
 }
 
-// Funcao para consultar vendas ##Bruno Henrique
 void ConsultarVendas() {
     const char *nomeArquivoVendas = "./Dados/DadosDasVendas.txt";
     FILE *arquivoVendas = fopen(nomeArquivoVendas, "r");
@@ -497,30 +497,8 @@ void ConsultarVendas() {
     printf("\nPressione Enter para continuar...");
     getchar();
     getchar();
-
-
-    if (!encontrouVenda) {
-        switch(opcao) {
-            case 1:
-                printf("Nenhuma venda cadastrada no sistema.\n");
-                break;
-            case 2:
-                printf("Venda com código %d não encontrada.\n", codigoBusca);
-                break;
-            case 3:
-                printf("Nenhuma venda encontrada para o vendedor ID %d.\n", idVendedorBusca);
-                break;
-        }
-    }
-
-    fclose(arquivoVendas);
-
-    // pausa para o usuário ver o resultado
-    printf("\nPressione Enter para continuar...");
-
 }
 
-// registrar vendas #Rafael Abras
 void RegistrarVenda() {
     const char *nomeArquivoProdutos = "./Dados/DadosDosProdutos.txt";
     const char *nomeArquivoVendas = "./Dados/DadosDasVendas.txt";
@@ -539,7 +517,6 @@ void RegistrarVenda() {
     printf("Digite o ID do vendedor: ");
     scanf("%d", &novaVenda.idVendedor);
 
-    // Buscar vendedor ANTES de continuar
     Vendedor vendedor;
     if (!buscarVendedorPorId(novaVenda.idVendedor, &vendedor)) {
         printf("ERRO: Vendedor com ID %d nao encontrado no sistema.\n", novaVenda.idVendedor);
@@ -598,13 +575,11 @@ void RegistrarVenda() {
 
     fclose(arquivoProdutos);
 
-    // Verificar se pelo menos um item foi adicionado
     if (novaVenda.quantidadeItens == 0) {
         printf("Nenhum item foi adicionado a venda. Operacao cancelada.\n");
         return;
     }
 
-    // Salvar a venda no arquivo
     FILE *arquivoVendas = fopen(nomeArquivoVendas, "a");
     if (!arquivoVendas) {
         printf("Erro ao abrir arquivo de vendas.\n");
@@ -621,18 +596,55 @@ void RegistrarVenda() {
     fprintf(arquivoVendas, "Total da Venda: %.2f\n\n", novaVenda.totalVenda);
     fclose(arquivoVendas);
 
-    // Atualizar estoque
     atualizarEstoqueAposVenda(novaVenda.ProdutosVenda, novaVenda.quantidadeItens);
-    aplicarComissao(&vendedor, novaVenda.totalVenda);  // passa endereço do vendedor
 
-    // Aplicar comissao - CORRIGIDO
-    printf("\n--- Aplicando Comissao ---\n");
-    printf("Comissao antes da venda: R$%.2f\n", vendedor.comissao);
+    // Aplicar comissão
+    float bonus = novaVenda.totalVenda * 0.03f;
+    vendedor.comissao += bonus;
+    printf("\nComissao aplicada: R$%.2f\n", bonus);
+    printf("Comissao total do vendedor: R$%.2f\n", vendedor.comissao);
 
-    // Aplicar a comissao (modifica o vendedor)
-    aplicarComissao(&vendedor, novaVenda.totalVenda);
+    // Atualizar vendedor no arquivo
+    FILE *arquivoVendedores = fopen("./Dados/DadosDosVendedores.txt", "r+");
+    if (!arquivoVendedores) {
+        printf("Erro ao abrir arquivo de vendedores para atualizacao.\n");
+        return;
+    }
 
-    printf("Comissao apos a venda: R$%.2f\n", vendedor.comissao);
+    char tempFile[] = "./Dados/temp_vendedores.txt";
+    FILE *temp = fopen(tempFile, "w");
+    if (!temp) {
+        printf("Erro ao criar arquivo temporario.\n");
+        fclose(arquivoVendedores);
+        return;
+    }
+
+    char linha[200];
+    int vendedorAtualizado = 0;
+
+    while (fgets(linha, sizeof(linha), arquivoVendedores)) {
+        Vendedor v;
+        if (sscanf(linha, "%d,%49[^,],%f,%f", &v.id, v.nome, &v.salarioFixo, &v.comissao) == 4) {
+            if (v.id == vendedor.id) {
+                fprintf(temp, "%d,%s,%.2f,%.2f\n", v.id, v.nome, v.salarioFixo, vendedor.comissao);
+                vendedorAtualizado = 1;
+            } else {
+                fprintf(temp, "%d,%s,%.2f,%.2f\n", v.id, v.nome, v.salarioFixo, v.comissao);
+            }
+        }
+    }
+
+    fclose(arquivoVendedores);
+    fclose(temp);
+
+    remove("./Dados/DadosDosVendedores.txt");
+    rename(tempFile, "./Dados/DadosDosVendedores.txt");
+
+    if (vendedorAtualizado) {
+        printf("Comissao atualizada no sistema!\n");
+    } else {
+        printf("ERRO: Vendedor nao encontrado para atualizacao.\n");
+    }
 
     printf("\nVenda registrada com sucesso!\n");
     printf("Codigo da venda: %d\n", novaVenda.codigoDaVenda);
@@ -640,8 +652,6 @@ void RegistrarVenda() {
     printf("------------------------\n");
 }
 
-
-// A persistencia dos dados sera criada em uma funcao responsavel por criar o arquivo.txt # Rafael Abras
 void CriarProdutoArquivoDados() {
     const char *nomearquivo = "./Dados/DadosDosProdutos.txt";
     FILE *verificarExistencia = fopen(nomearquivo, "r");
@@ -653,7 +663,6 @@ void CriarProdutoArquivoDados() {
     }
 }
 
-// Codigo para pegar o ultimo codigo do produto lendo o arquivo ate EOF, e assim adicionando 1 NO ULTIMO ID. arquivo.txt # Rafael Abras
 int ObterUltimoCodigoProduto(const char *nomearquivo) {
     FILE *arquivo = fopen(nomearquivo, "r");
     if (!arquivo) return 0;
@@ -674,7 +683,6 @@ int ObterUltimoCodigoProduto(const char *nomearquivo) {
     return ultimoCodigo;
 }
 
-// Cria o produto no arquivo do diretorio ./Dados/DadosDosProdutos.Txt
 void CriarProduto(const char *nome_produto, int precovenda, int quantidadeEstoqueProduto) {
     const char *nomearquivo = "./Dados/DadosDosProdutos.txt";
     FILE *dados_produtos = fopen(nomearquivo, "a");
@@ -683,12 +691,11 @@ void CriarProduto(const char *nome_produto, int precovenda, int quantidadeEstoqu
     fclose(dados_produtos);
 }
 
-// Para cadastrar o produto com entrada de dados #Rafael Abras
 void CadastrarProduto() {
     char nome_produto[50];
     int preco_venda, quantidade_estoque;
 
-    getchar(); // limpa o \n pendente do scanf anterior
+    getchar();
     printf("Digite o nome do produto: ");
     fgets(nome_produto, sizeof(nome_produto), stdin);
     nome_produto[strcspn(nome_produto, "\n")] = '\0';
@@ -703,7 +710,6 @@ void CadastrarProduto() {
     printf("Produto cadastrado com sucesso!\n");
 }
 
-// Criacao do arquivo txt para cadastro dos vendedores #Joao Felipe Manferrari
 void CriarVendedoresArquivoDados() {
     const char *nomearquivo = "./Dados/DadosDosVendedores.txt";
     FILE *verificarExistencia = fopen(nomearquivo, "r");
@@ -715,7 +721,6 @@ void CriarVendedoresArquivoDados() {
     }
 }
 
-// Funcao para cadastrar vendedor e salvar no arquivo #Matheus
 void cadastrarVendedor() {
     const char *nomearquivo = "./Dados/DadosDosVendedores.txt";
     FILE *arquivo = fopen(nomearquivo, "a+");
@@ -728,7 +733,6 @@ void cadastrarVendedor() {
     int ultimoId = 0;
     char linha[200];
 
-    // correção: ler o último ID corretamente
     rewind(arquivo);
     while (fgets(linha, sizeof(linha), arquivo)) {
         sscanf(linha, "%d,%*[^,],%*f,%*f", &ultimoId);
@@ -751,83 +755,6 @@ void cadastrarVendedor() {
     printf("Vendedor cadastrado com sucesso! ID: %d\n", v.id);
 }
 
-// Funcao para atualizar vendedor no arquivo apos comissao
-void atualizarVendedorNoArquivo(Vendedor *v) {
-    const char *nomearquivo = "./Dados/DadosDosVendedores.txt";
-    const char *tempArquivo = "./Dados/temp_vendedor.txt";
-
-    FILE *arquivoOriginal = fopen(nomearquivo, "r");
-    FILE *arquivoTemp = fopen(tempArquivo, "w");
-
-    if (!arquivoOriginal || !arquivoTemp) {
-        printf("Erro ao abrir os arquivos para atualizacao.\n");
-        if (arquivoOriginal) fclose(arquivoOriginal);
-        if (arquivoTemp) fclose(arquivoTemp);
-        return;
-    }
-
-    char linha[200];
-    Vendedor temp;
-    int vendedorAtualizado = 0;
-
-     while (fgets(linha, sizeof(linha), arquivoOriginal)) {
-        linha[strcspn(linha, "\n")] = '\0';
-
-        if (sscanf(linha, "%d,%49[^,],%f,%f",
-                   &temp.id, temp.nome, &temp.salarioFixo, &temp.comissao) == 4) {
-            if (temp.id == v->id) {  // Usar v->id
-                fprintf(arquivoTemp, "%d,%s,%.2f,%.2f\n",
-                        v->id, v->nome, v->salarioFixo, v->comissao);  // Usar ponteiro
-                vendedorAtualizado = 1;
-            } else {
-                fprintf(arquivoTemp, "%d,%s,%.2f,%.2f\n",
-                        temp.id, temp.nome, temp.salarioFixo, temp.comissao);
-            }
-        }
-    }
-
-    fclose(arquivoOriginal);
-    fclose(arquivoTemp);
-
-    // substitui o arquivo original pelo temporario
-    if (remove(nomearquivo) != 0) {
-        printf("Erro ao remover arquivo original de vendedores.\n");
-        return;
-    }
-
-    if (rename(tempArquivo, nomearquivo) != 0) {
-        printf("Erro ao renomear arquivo temporario de vendedores.\n");
-        return;
-    }
-
-    if (vendedorAtualizado) {
-        printf("Dados do vendedor atualizados no arquivo com sucesso.\n");
-    } else {
-        printf("ERRO: Vendedor nao foi encontrado para atualizacao no arquivo.\n");
-    }
-}
-
-// Funcao para aplicar comissao de 3% ao vendedor apos uma venda #Matheus
-void aplicarComissao(Vendedor *v, float valorVenda) {
-    if (v == NULL) {
-        printf("ERRO: Ponteiro do vendedor e nulo.\n");
-        return;
-    }
-
-    float bonus = valorVenda * 0.03f;
-    v->comissao += bonus;
-
-    printf("\n=== APLICACAO DE COMISSAO ===\n");
-    printf("Vendedor: %s (ID: %d)\n", v->nome, v->id);
-    printf("Valor da venda: R$%.2f\n", valorVenda);
-    printf("Comissao aplicada (3%%): R$%.2f\n", bonus);
-    printf("Comissao total acumulada: R$%.2f\n", v->comissao);
-    printf("=============================\n");
-
-    // atualizar o arquivo com os novos dados
-     atualizarVendedorNoArquivo(v);
-}
-
 void ListarVendedores() {
     FILE *arquivo = fopen("./Dados/DadosDosVendedores.txt", "r");
     if (!arquivo) {
@@ -840,6 +767,7 @@ void ListarVendedores() {
 
     printf("\n--- Lista de Vendedores ---\n");
     while (fgets(linha, sizeof(linha), arquivo)) {
+        linha[strcspn(linha, "\n")] = '\0';
         if (sscanf(linha, "%d,%49[^,],%f,%f",
                    &v.id, v.nome, &v.salarioFixo, &v.comissao) == 4) {
             printf("ID: %d | Nome: %s | Salario: R$%.2f | Comissao: R$%.2f\n",
@@ -871,6 +799,7 @@ void ExcluirVendedor() {
     Vendedor v;
 
     while (fgets(linha, sizeof(linha), arquivoOriginal)) {
+        linha[strcspn(linha, "\n")] = '\0';
         if (sscanf(linha, "%d,%49[^,],%f,%f",
                    &v.id, v.nome, &v.salarioFixo, &v.comissao) == 4) {
             if (v.id == codigo) {
@@ -893,7 +822,6 @@ void ExcluirVendedor() {
         printf("Vendedor com ID %d nao encontrado.\n", codigo);
 }
 
-// Funcao para cadastrar comprador #Bruno Henrique
 void cadastrarComprador() {
     FILE *arquivo = fopen("./Dados/DadosDosCompradores.txt", "a+");
     if (!arquivo) {
@@ -973,6 +901,7 @@ void EditarVendedor() {
     Vendedor v;
 
     while (fgets(linha, sizeof(linha), arquivoOriginal)) {
+        linha[strcspn(linha, "\n")] = '\0';
         if (sscanf(linha, "%d,%49[^,],%f,%f",
                    &v.id, v.nome, &v.salarioFixo, &v.comissao) == 4) {
             if (v.id == codigo) {
@@ -1017,9 +946,10 @@ void listarCompradores() {
 
     printf("\n--- Lista de Compradores ---\n");
     while (fgets(linha, sizeof(linha), arquivo)) {
+        linha[strcspn(linha, "\n")] = '\0';
         int result = sscanf(linha, "%d,%49[^,],%11[^,],%49[^,],%49[^,],%49[^,],%49[^,],%2[^,],%9[^\n]",
                             &c.id, c.nome, c.cpf, c.email, c.rua, c.bairro, c.cidade, c.estado, c.cep);
-        if (result == 8) {
+        if (result == 9) {
             printf("ID: %d | Nome: %s | CPF: %s | E-mail: %s\n", c.id, c.nome, c.cpf, c.email);
             printf("  Endereco: %s, %s, %s - %s, %s\n", c.rua, c.bairro, c.cidade, c.estado, c.cep);
         }
@@ -1048,6 +978,7 @@ void excluirComprador() {
     int encontrado = 0;
 
     while (fgets(linha, sizeof(linha), orig)) {
+        linha[strcspn(linha, "\n")] = '\0';
         if (sscanf(linha, "%d,%49[^,],%11[^,],%49[^,],%49[^,],%49[^,],%49[^,],%2[^,],%9[^\n]",
                    &c.id, c.nome, c.cpf, c.email, c.rua, c.bairro, c.cidade, c.estado, c.cep) == 9) {
             if (c.id == id) {
@@ -1090,6 +1021,7 @@ void editarComprador() {
     int encontrado = 0;
 
     while (fgets(linha, sizeof(linha), orig)) {
+        linha[strcspn(linha, "\n")] = '\0';
         if (sscanf(linha, "%d,%49[^,],%11[^,],%49[^,],%49[^,],%49[^,],%49[^,],%2[^,],%9[^\n]",
                    &c.id, c.nome, c.cpf, c.email, c.rua, c.bairro, c.cidade, c.estado, c.cep) == 9) {
             if (c.id == id) {
@@ -1142,7 +1074,6 @@ void editarComprador() {
         printf("Comprador com ID %d nao encontrado.\n", id);
 }
 
-// MENU DOS PRODUTOS
 void menu_produtos() {
     limparTela();
     int flag;
@@ -1167,7 +1098,6 @@ void menu_produtos() {
     } while (flag != 5);
 }
 
-// MENU VENDEDORES
 void menu_vendedores() {
     limparTela();
     int opcao;
@@ -1235,14 +1165,13 @@ void menu_vendas() {
             case 4: printf("Voltando ao menu principal...\n"); break;
             default: printf("Opcao invalida.\n"); break;
         }
-    } while (opcao != 3);
+    } while (opcao != 4);
 }
 
 void menu_principal() {
-    limparTela();
     int flag;
     do {
-            limparTela();
+        limparTela();
         printf("\n====== E-commerce do Djabe e da Mafe ======\n");
         printf("1. Produtos\n");
         printf("2. Vendedores\n");
@@ -1265,6 +1194,9 @@ void menu_principal() {
                 printf("Digite o codigo da venda: ");
                 scanf("%d", &codigoVenda);
                 emitirNotaFiscal(idComprador, codigoVenda);
+                printf("\nPressione Enter para continuar...");
+                getchar();
+                getchar();
                 break;
             }
             case 6:
@@ -1278,7 +1210,8 @@ void menu_principal() {
 }
 
 int main() {
-    srand(time(NULL)); // inicializa a semente do gerador de numeros aleatorios
+    srand(time(NULL));
+    system("mkdir -p ./Dados");
 
     CriarProdutoArquivoDados();
     CriarVendasArquivoDados();

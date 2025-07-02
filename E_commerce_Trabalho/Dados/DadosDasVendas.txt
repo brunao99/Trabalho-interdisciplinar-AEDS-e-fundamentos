@@ -35,3 +35,15 @@ Venda #9872,Vendedor ID: 2
 bruno,10,3,50,150.00
 Total da Venda: 150.00
 
+Venda #642,Vendedor ID: 2
+bruno,10,1,50,50.00
+Total da Venda: 50.00
+
+Venda #750,Vendedor ID: 2
+bruno,10,1,50,50.00
+Total da Venda: 50.00
+
+Venda #2046,Vendedor ID: 2
+teste,11,3,5,15.00
+Total da Venda: 15.00
+
