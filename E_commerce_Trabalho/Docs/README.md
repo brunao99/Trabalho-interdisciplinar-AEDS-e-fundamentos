@@ -2,7 +2,7 @@
 
 ## 📋 Backlog do Trabalho
 #### Aqui vai persistir a documentação do trabalho, casos de teste, fotos de sprint, etc...
-# Casos de Teste - Sistema de E-commerce em C
+
 
 # 📦 Sistema de E-commerce em C
 
@@ -74,6 +74,46 @@ typedef struct venda {
     float totalVenda;
 } Vendas;
 
+## ⚙️ Funções do Sistema
+
+Esta seção descreve as funções principais do sistema de e-commerce em C, separadas por módulo.
+
+---
+
+### 🛒 1. Módulo de Produtos
+
+| Função               | Descrição                                                                 |
+|----------------------|---------------------------------------------------------------------------|
+| `CriarProduto()`     | Cadastra um novo produto com nome, preço, código e estoque.               |
+| `EditarProduto()`    | Permite modificar dados de um produto já existente.                       |
+| `ExcluirProduto()`   | Remove um produto do sistema.                                             |
+| `ConsultarProduto()` | Lista todos os produtos cadastrados no sistema.                          |
+| `ObterUltimoCodigoProduto()` | Garante unicidade dos códigos de produto, obtendo o último utilizado. |
+
+---
+
+### 👤 2. Módulo de Vendedores
+
+| Função                    | Descrição                                                                 |
+|---------------------------|---------------------------------------------------------------------------|
+| `CadastrarVendedor()`     | Registra um novo vendedor com nome, salário fixo e ID automático.         |
+| `EditarVendedor()`        | Permite alterar informações do vendedor.                                 |
+| `ExcluirVendedor()`       | Remove o cadastro de um vendedor.                                        |
+| `ListarVendedores()`      | Lista todos os vendedores cadastrados.                                   |
+| `AtualizarComissaoVendedor()` | Atualiza a comissão com base nas vendas (3% sobre total vendido).       |
+
+---
+
+### 👥 3. Módulo de Compradores
+
+| Função                   | Descrição                                                                  |
+|--------------------------|----------------------------------------------------------------------------|
+| `CadastrarComprador()`   | Registra um comprador com nome, CPF, email e endereço completo.            |
+| `EditarComprador()`      | Permite modificar dados de um comprador.                                   |
+| `ExcluirComprador()`     | Remove o cadastro de um comprador.                                         |
+| `ListarCompradores()`    | Exibe todos os compradores registrados no sistema.
+
+# Casos de Teste - Sistema de E-commerce em C
 
 ## 🧪 1. Menu de Produtos
 
