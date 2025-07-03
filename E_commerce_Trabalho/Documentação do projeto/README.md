@@ -6,8 +6,6 @@
 
 ## 1. Introdução
 
-## 1. Objetivo do Trabalho
-
 ### 1.1 Objetivo Geral
 Desenvolver um sistema de gerenciamento de e-commerce em linguagem C que implemente:
 
@@ -109,7 +107,71 @@ typedef struct venda {
 
 ## ⚙️ Funções do Sistema
 
-Esta seção descreve as funções principais do sistema de e-commerce em C, separadas por módulo.
+# 📝 Lista Completa de Funções no Código
+
+Abaixo, uma lista consolidada de todas as funções presentes no código, organizadas por módulo e incluindo as funções de interface.
+
+---
+
+###  Módulo de Produtos
+- `CriarProduto()`
+- `CadastrarProduto()`
+- `EditarProduto()`
+- `ExcluirProduto()`
+- `ConsultarProdutoArquivoDados()`
+- `VerificarEstoque()`
+- `ObterUltimoCodigoProduto()`
+- `CriarProdutoArquivoDados()`
+
+---
+
+### Módulo de Vendedores
+- `cadastrarVendedor()`
+- `EditarVendedor()`
+- `ExcluirVendedor()`
+- `ListarVendedores()`
+- `buscarVendedorPorId()`
+- `CriarVendedoresArquivoDados()`
+
+---
+
+### Módulo de Compradores
+- `cadastrarComprador()`
+- `editarComprador()`
+- `excluirComprador()`
+- `listarCompradores()`
+- `validarCEP()`
+- `validarEstado()`
+- `validarCPF()`
+
+---
+
+### Módulo de Vendas
+- `RegistrarVenda()`
+- `atualizarEstoqueAposVenda()`
+- `ConsultarVendas()`
+- `CriarVendasArquivoDados()`
+
+---
+
+### Módulo de Nota Fiscal
+- `emitirNotaFiscal()`
+
+---
+
+###  Utilitários
+- `limparTela()`
+
+---
+
+###  Interface (Menus)
+- `menu_principal()`
+- `menu_produtos()`
+- `menu_vendedores()`
+- `menu_compradores()`
+- `menu_vendas()`
+
+Agora a seção abaixo especifica as funções:
 
 ---
 
