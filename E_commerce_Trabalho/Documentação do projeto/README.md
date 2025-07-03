@@ -379,6 +379,22 @@ Agora a seção abaixo especifica as funções:
 
 
 
+# Fotos das Sprints e Reuniões 
+
+![Foto01](../FotosDocumentação/foto1.JPG)
+
+![Foto02](../FotosDocumentação/foto2.png)
+
+![Foto03](../FotosDocumentação/foto3.JPG)
+
+![Foto04](../FotosDocumentação/foto4.JPG)
+
+![Foto05](../FotosDocumentação/foto5.JPG)
+
+![Foto06](../FotosDocumentação/foto6.JPG)
+
+![Foto07](../FotosDocumentação/Foto07.JPG)
+
 ## 👥 Integrantes
 - Bruno Henrique de Aguiar Xavier
 - Rafael  
