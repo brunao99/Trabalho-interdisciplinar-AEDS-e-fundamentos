@@ -1,15 +1,48 @@
 # Trabalho Interdisciplinar - AEDS / Fundamentos (Documentos)
 
-## 📋 Backlog do Trabalho
 #### Aqui vai persistir a documentação do trabalho, casos de teste, fotos de sprint, etc...
 
 # 📦 Sistema de E-commerce em C
 
 ## 1. Introdução
 
-### 1.1. Objetivo
-Este projeto implementa um sistema de e-commerce desenvolvido em linguagem C, permitindo o gerenciamento de produtos, vendedores, compradores, vendas e emissão de notas fiscais. Foi desenvolvido como parte de um trabalho interdisciplinar entre as disciplinas de **Algoritmos e Estruturas de Dados (AEDS)** e **Fundamentos de Engenharia de Software**.
+## 1. Objetivo do Trabalho
 
+### 1.1 Objetivo Geral
+Desenvolver um sistema de gerenciamento de e-commerce em linguagem C que implemente:
+
+- ✅ **Operações CRUD** completas para produtos, vendedores e compradores  
+- ✅ **Controle de transações comerciais** com registro de vendas  
+- ✅ **Mecanismos de validação** para evitar inconsistências nos dados  
+- ✅ **Persistência em arquivos** para armazenamento dos registros  
+
+### 1.2 Objetivos Específicos
+
+1. **Gestão de Cadastros**
+   - Implementar sistemas de IDs automáticos e únicos
+   - Garantir integridade dos dados (evitar CPF/códigos duplicados)
+
+2. **Controle Comercial**
+   - Registrar vendas com atualização automática de estoque
+   - Calcular comissões de vendedores (3% por venda)
+   - Implementar política de fretes graduais
+
+3. **Geração de Documentos**
+   - Emitir notas fiscais com:
+     - Dados completos do comprador/vendedor
+     - Detalhamento de produtos
+     - Cálculo automático de totais e fretes
+
+4. **Validação do Sistema**
+   - Desenvolver casos de teste para todas as funcionalidades
+   - Garantir tratamento adequado de erros e exceções
+   - Documentar processos e decisões técnicas
+
+### 1.3 Justificativa
+O projeto integra conhecimentos de:
+- **Algoritmos e Estruturas de Dados** (gestão eficiente de informações)
+- **Fundamentos de Engenharia de Software** (documentação, testes e arquitetura)
+- **Boas práticas de programação** (validações, modularização e legibilidade)
 ### 1.2. Escopo
 
 O sistema contempla as seguintes funcionalidades:
@@ -20,7 +53,7 @@ O sistema contempla as seguintes funcionalidades:
 - ✅ Emissão de Nota Fiscal (com cálculo de frete)  
 - ✅ Testes e Validações (documentação e casos de teste)
 
-### 1.3. Tecnologias Utilizadas
+### 1.4. Tecnologias Utilizadas
 
 | Item                 | Descrição           |
 |----------------------|---------------------|
@@ -72,6 +105,7 @@ typedef struct venda {
     int quantidadeItens;
     float totalVenda;
 } Vendas;
+```
 
 ## ⚙️ Funções do Sistema
 
@@ -284,7 +318,7 @@ Esta seção descreve as funções principais do sistema de e-commerce em C, sep
 
 
 ## 👥 Integrantes
-- Bruno  
+- Bruno Henrique de Aguiar Xavier
 - Rafael  
 - João  
 - Matheus
