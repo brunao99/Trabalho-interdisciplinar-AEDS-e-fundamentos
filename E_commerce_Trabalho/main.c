@@ -501,7 +501,7 @@ void ConsultarVendas() {
 
                         if (sscanf(linha, "%49[^,],%d,%d,%d,%f",
                                    nomeProduto, &codigoProduto, &quantidade, &preco, &total) == 5) {
-                            printf("  - %s (Código: %d) | Qtd: %d | Preço: R$ %d | Total: R$ %.2f\n",
+                            printf("  - %s (Codigo: %d) | Qtd: %d | Preço: R$ %d | Total: R$ %.2f\n",
                                    nomeProduto, codigoProduto, quantidade, preco, total);
                         }
                     }
@@ -518,7 +518,7 @@ void ConsultarVendas() {
                 printf("Nenhuma venda cadastrada no sistema.\n");
                 break;
             case 2:
-                printf("Venda com código %d não encontrada.\n", codigoBusca);
+                printf("Venda com codigo %d nao encontrada.\n", codigoBusca);
                 break;
             case 3:
                 printf("Nenhuma venda encontrada para o vendedor ID %d.\n", idVendedorBusca);
@@ -726,7 +726,7 @@ void CriarProduto(const char *nome_produto, int preco_venda, int quantidade_esto
     fprintf(dados_produtos, "%s,%d,%d,%d\n", nome_produto, codigo, quantidade_estoque, preco_venda);
 
     fclose(dados_produtos);
-    printf("Produto cadastrado com sucesso! Código gerado: %d\n", codigo);
+    printf("Produto cadastrado com sucesso! Codigo gerado: %d\n", codigo);
 }
 
 
@@ -1217,42 +1217,54 @@ void editarComprador() {
             encontrado = 1;
             printf("Comprador encontrado: %s\n", campos[1]);
 
-
             printf("Novo nome: ");
             fgets(c.nome, sizeof(c.nome), stdin);
             c.nome[strcspn(c.nome, "\n")] = '\0';
             if (strlen(c.nome) == 0) strcpy(c.nome, campos[1]);
+
+            while (getchar() != '\n');
 
             printf("Novo CPF (apenas numeros, 11 digitos): ");
             fgets(c.cpf, sizeof(c.cpf), stdin);
             c.cpf[strcspn(c.cpf, "\n")] = '\0';
             if (strlen(c.cpf) != 11 || !isdigit(c.cpf[0])) strcpy(c.cpf, campos[2]);
 
+            while (getchar() != '\n');
+
             printf("Novo e-mail: ");
             fgets(c.email, sizeof(c.email), stdin);
             c.email[strcspn(c.email, "\n")] = '\0';
             if (strlen(c.email) == 0) strcpy(c.email, campos[3]);
+
+            while (getchar() != '\n');
 
             printf("Nova rua: ");
             fgets(c.rua, sizeof(c.rua), stdin);
             c.rua[strcspn(c.rua, "\n")] = '\0';
             if (strlen(c.rua) == 0) strcpy(c.rua, campos[4]);
 
+            while (getchar() != '\n');
+
             printf("Novo bairro: ");
             fgets(c.bairro, sizeof(c.bairro), stdin);
             c.bairro[strcspn(c.bairro, "\n")] = '\0';
             if (strlen(c.bairro) == 0) strcpy(c.bairro, campos[5]);
+
+            while (getchar() != '\n');
 
             printf("Nova cidade: ");
             fgets(c.cidade, sizeof(c.cidade), stdin);
             c.cidade[strcspn(c.cidade, "\n")] = '\0';
             if (strlen(c.cidade) == 0) strcpy(c.cidade, campos[6]);
 
+            while (getchar() != '\n');
+
             printf("Novo estado (UF, 2 letras): ");
-            fgets(c.estado, sizeof(c.estado), stdin);
             fgets(c.estado, sizeof(c.estado), stdin);
             c.estado[strcspn(c.estado, "\n")] = '\0';
             if (strlen(c.estado) != 2) strcpy(c.estado, campos[7]);
+
+            while (getchar() != '\n');
 
             printf("Novo CEP (8 digitos): ");
             fgets(c.cep, sizeof(c.cep), stdin);
@@ -1262,7 +1274,6 @@ void editarComprador() {
             fprintf(temp, "%d,%s,%s,%s,%s,%s,%s,%s,%s\n",
                     id, c.nome, c.cpf, c.email, c.rua, c.bairro, c.cidade, c.estado, c.cep);
         } else {
-
             fprintf(temp, "%s\n", linha);
         }
     }

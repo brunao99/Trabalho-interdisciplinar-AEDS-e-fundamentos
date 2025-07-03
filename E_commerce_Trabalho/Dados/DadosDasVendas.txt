@@ -1,0 +1,4 @@
+Venda #6697,Vendedor ID: 1
+TesteProd,1,30,400,12000.00
+Total da Venda: 12000.00
+
