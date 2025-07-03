@@ -114,26 +114,26 @@ https://www.youtube.com/watch?v=q5U3wo4TOpE
 #### Bruno e Rafael
 
 - Bruno:
-   - [ ] **6.1**  Documentar os módulos existentes (funções)
+   - [✅] **6.1**  Documentar os módulos existentes (funções)
      ##### todos participaram da documentação, é apenas as correções necessárias.
-      - [ ]  **6.1.1** Especificar objetivo, parâmetros e retorno de cada função
-      - [ ]  **6.1.2** Verificar se os nomes dos módulos são coerentes com sua funcionalidade
+      - [✅]  **6.1.1** Especificar objetivo, parâmetros e retorno de cada função
+      - [✅]  **6.1.2** Verificar se os nomes dos módulos são coerentes com sua funcionalidade
 - Rafael:
     - [ ] **6.2** Criar e executar casos de teste para cada módulo (incluindo exceções)
-     - [ ]  **6.2.1** Elaborar casos de teste de sucesso (entrada válida)
-     - [ ]  **6.2.2** Elaborar casos de teste de exceção (entradas inválidas, arquivos inexistentes, etc.)
-     - [ ]  **6.2.3** Executar os testes e registrar as saídas reais
+     - [✅]  **6.2.1** Elaborar casos de teste de sucesso (entrada válida)
+     - [✅]  **6.2.2** Elaborar casos de teste de exceção (entradas inválidas, arquivos inexistentes, etc.)
+     - [✅]  **6.2.3** Executar os testes e registrar as saídas reais
 
 #### João e Matheus
 - Matheus:
-    - [ ] **6.4** Garantir que as alterações não quebrem funcionalidades anteriores
+    - [✅] **6.4** Garantir que as alterações não quebrem funcionalidades anteriores
      - [ ]  **6.4.1** Reexecutar os testes anteriores após mudanças
-     - [ ]  **6.4.2** Confirmar se os módulos ainda funcionam corretamente
-     - [ ]  **6.4.2** Atualizar o relatório com os resultados pós-refatoração
+     - [✅]  **6.4.2** Confirmar se os módulos ainda funcionam corretamente
+     - [✅]  **6.4.2** Atualizar o relatório com os resultados pós-refatoração
 - João:
-    - [ ] **6.3** Gerar relatório comparando saída esperada vs real
-     - [ ]  **6.3.1** Criar tabela com nome da função, entrada, saída esperada, saída real e status
-     - [ ]  **6.3.2** Identificar falhas e anotar correções necessárias
+     - [✅] **6.3** Gerar relatório comparando saída esperada vs real
+     - [✅]  **6.3.1** Criar tabela com nome da função, entrada, saída esperada, saída real e status
+     - [✅]  **6.3.2** Identificar falhas e anotar correções necessárias
 
 ---
 
