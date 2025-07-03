@@ -1,5 +1,12 @@
 # Trabalho Interdisciplinar - AEDS / Fundamentos
 
+## Pitch mostrando todas as funcionalidades do sistema:
+
+https://www.youtube.com/watch?v=q5U3wo4TOpE
+
+## Outras documentações
+- Para acessar outras documentações do projeto basta ir em ./E_commerce_Trabalho/Documentação do projeto/
+
 ## 📋 Backlog do Trabalho
 
 ### 0. Menu principal
